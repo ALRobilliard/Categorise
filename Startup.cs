@@ -11,12 +11,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using CategoriseApi.Models;
 
 namespace CategoriseApi
 {
     public class Startup
     {
+        private static string _connectionString;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,8 +32,14 @@ namespace CategoriseApi
         {
             services.AddControllers();
 
+            var builder = new NpgsqlConnectionStringBuilder(
+                Configuration.GetConnectionString("CategoriseContext"));
+            builder.Username = Configuration["DbUser"];
+            builder.Password = Configuration["DbPassword"];
+            _connectionString = builder.ConnectionString;
+
             services.AddDbContext<CategoriseContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("CategoriseContext")));
+                options.UseNpgsql(_connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>18487093-9a01-4c68-8a39-cc8b79fd4cbf</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,6 +10,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.2" />
+    <PackageReference Include="npgsql" Version="4.1.3.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
   </ItemGroup>
 
