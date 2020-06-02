@@ -1,16 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CategoriseApi.Models
 {
     public class Transaction
     {
+      [Key]
       public Guid TransactionId { get; set; }
+      [Required]
+      [MaxLength(25)]
       public string TransactionType { get; set; }
+      [Required]
       public decimal Amount { get; set; }
+      [Required]
       public bool IsShared { get; set; }
+      [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
       public DateTime CreatedOn {get; set; }
+      [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
       public DateTime ModifiedOn { get; set; }
 
       public Guid AccountId { get; set; }
