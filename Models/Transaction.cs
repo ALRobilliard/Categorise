@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CategoriseApi.Models
 {
-    public class Transaction
+    public class Transaction : BaseEntity
     {
       [Key]
       public Guid TransactionId { get; set; }
@@ -16,10 +16,6 @@ namespace CategoriseApi.Models
       public decimal Amount { get; set; }
       [Required]
       public bool IsShared { get; set; }
-      [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-      public DateTime CreatedOn {get; set; }
-      [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-      public DateTime ModifiedOn { get; set; }
 
       public Guid AccountId { get; set; }
       [ForeignKey("AccountForeignKey")]

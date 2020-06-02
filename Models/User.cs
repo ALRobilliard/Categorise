@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CategoriseApi.Models
 {
-  public class User
+  public class User : BaseEntity
   {
     [Key]
     public Guid UserId { get; set; }
@@ -22,10 +22,6 @@ namespace CategoriseApi.Models
     public bool? ConfirmedEmail { get; set; }
     public byte[] PasswordHash { get; set; }
     public byte[] PasswordSalt { get; set; }
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public DateTime CreatedOn { get; set; }
-    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-    public DateTime ModifiedOn { get; set; }
     public DateTime? LastLogin { get; set; }
 
     public List<Account> Accounts { get; set; }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -35,6 +36,27 @@ namespace CategoriseApi.Models
       {
         optionsBuilder.UseNpgsql(this._connectionString);
       }
+    }
+
+    public override int SaveChanges()
+    {
+      var entries = ChangeTracker
+        .Entries()
+        .Where(e => e.Entity is BaseEntity && (
+          e.State == EntityState.Added ||
+          e.State == EntityState.Modified));
+
+      foreach (var entry in entries)
+      {
+        ((BaseEntity)entry.Entity).ModifiedOn = DateTime.Now;
+
+        if (entry.State == EntityState.Added)
+        {
+          ((BaseEntity)entry.Entity).CreatedOn = DateTime.Now;
+        }
+      }
+
+      return base.SaveChanges();
     }
   }
 }
