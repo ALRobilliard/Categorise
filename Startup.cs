@@ -14,7 +14,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 using Npgsql;
+using CategoriseApi.Helpers;
 using CategoriseApi.Models;
 using CategoriseApi.Services;
 
@@ -34,6 +36,18 @@ namespace CategoriseApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+
+            var builder = new NpgsqlConnectionStringBuilder(
+                Configuration.GetConnectionString("CategoriseContext"));
+            builder.Username = Configuration["DbUser"];
+            builder.Password = Configuration["DbPassword"];
+            _connectionString = builder.ConnectionString;
+
+            services.AddDbContext<CategoriseContext>(options =>
+                options.UseNpgsql(_connectionString));
+            services.AddAutoMapper(typeof(Startup));
+
             // Configure JWT authentication.
             var key = Encoding.ASCII.GetBytes(Configuration["AppSecret"]);
             services.AddAuthentication(options =>
@@ -67,16 +81,6 @@ namespace CategoriseApi
                 };
             });
             services.AddScoped<IUserService, UserService>();
-            services.AddControllers();
-
-            var builder = new NpgsqlConnectionStringBuilder(
-                Configuration.GetConnectionString("CategoriseContext"));
-            builder.Username = Configuration["DbUser"];
-            builder.Password = Configuration["DbPassword"];
-            _connectionString = builder.ConnectionString;
-
-            services.AddDbContext<CategoriseContext>(options =>
-                options.UseNpgsql(_connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
