@@ -6,8 +6,6 @@ namespace CategoriseApi.Models
 {
   public class TransactionTag : BaseEntity
   {
-    [Key]
-    public Guid TransactionTagId { get; set; }
     [Required]
     [MaxLength(25)]
     public string TransactionTagName { get; set; }

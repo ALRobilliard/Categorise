@@ -7,8 +7,6 @@ namespace CategoriseApi.Models
 {
     public class Transaction : BaseEntity
     {
-      [Key]
-      public Guid TransactionId { get; set; }
       [Required]
       [MaxLength(25)]
       public string TransactionType { get; set; }

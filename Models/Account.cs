@@ -7,8 +7,6 @@ namespace CategoriseApi.Models
 {
   public class Account : BaseEntity
   {
-    [Key]
-    public Guid AccountId { get; set; }
     [Required]
     [MaxLength(25)]
     public string AccountName { get; set; }

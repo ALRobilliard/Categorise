@@ -6,8 +6,6 @@ namespace CategoriseApi.Models
 {
   public class TransactionParty : BaseEntity
   {
-    [Key]
-    public Guid TransactionPartyId { get; set; }
     [Required]
     [MaxLength(50)]
     public string TransactionPartyName { get; set; }

@@ -6,8 +6,6 @@ namespace CategoriseApi.Models
 {
   public class TransactionNote : BaseEntity
   {
-    [Key]
-    public Guid TransactionNoteId { get; set; }
     [Required]
     [MaxLength(50)]
     public string TransactionNoteSubject { get; set; }

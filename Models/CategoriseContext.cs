@@ -52,6 +52,7 @@ namespace CategoriseApi.Models
 
         if (entry.State == EntityState.Added)
         {
+          ((BaseEntity)entry.Entity).Id = Guid.NewGuid();
           ((BaseEntity)entry.Entity).CreatedOn = DateTime.Now;
         }
       }
