@@ -12,8 +12,9 @@ namespace CategoriseApi.Models
       public string TransactionType { get; set; }
       [Required]
       public decimal Amount { get; set; }
-      [Required]
       public bool IsShared { get; set; }
+      [Required]
+      public DateTime TransactionDate { get; set; }
 
       public Guid AccountId { get; set; }
       [ForeignKey("AccountForeignKey")]
@@ -21,6 +22,7 @@ namespace CategoriseApi.Models
       public Guid CategoryId { get; set; }
       [ForeignKey("CategoryForeignKey")]
       public Category Category { get; set; }
+
       public Guid UserId { get; set; }
       [ForeignKey("UserForeignKey")]
       public User User { get; set; }
