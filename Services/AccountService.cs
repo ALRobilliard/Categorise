@@ -7,10 +7,10 @@ namespace CategoriseApi.Services
 {
   public interface IAccountService
   {
-    IEnumerable<Account> GetAccounts();
-    Account GetAccountById(Guid id);
-    Account GetAccountByName(string name);
-    Account CreateAccount(string accountName, User user);
+    IEnumerable<Account> GetAccounts(Guid userId);
+    Account GetAccountById(Guid id, Guid userId);
+    Account GetAccountByName(string name, Guid userId);
+    Account CreateAccount(string accountName, Guid userId);
   }
 
   public class AccountService : IAccountService
@@ -22,27 +22,28 @@ namespace CategoriseApi.Services
       _context = context;
     }
 
-    public IEnumerable<Account> GetAccounts()
+    public IEnumerable<Account> GetAccounts(Guid userId)
     {
-      return _context.Accounts;
+      return _context.Accounts.Where(a => a.UserId == userId);
     }
 
-    public Account GetAccountById(Guid id)
+    public Account GetAccountById(Guid id, Guid userId)
     {
-      return _context.Accounts.Find(id);
+      return _context.Accounts.Where(a => a.Id == id && a.UserId == userId).FirstOrDefault();
     }
 
-    public Account GetAccountByName(string name)
+    public Account GetAccountByName(string name, Guid userId)
     {
-      return _context.Accounts.Where(a => a.AccountName == name).FirstOrDefault();
+      return _context.Accounts
+        .Where(a => a.AccountName == name && a.UserId == userId).FirstOrDefault();
     }
 
-    public Account CreateAccount(string accountName, User user)
+    public Account CreateAccount(string accountName, Guid userId)
     {
       Account account = new Account
       {
         AccountName = accountName,
-        User = user
+        UserId = userId
       };
 
       _context.Accounts.Add(account);

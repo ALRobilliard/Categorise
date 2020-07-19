@@ -13,6 +13,7 @@ using CategoriseApi.Dtos;
 using CategoriseApi.Helpers;
 using CategoriseApi.Models;
 using CategoriseApi.Services;
+using CategoriseApi.Extensions;
 
 namespace CategoriseApi.Controllers
 {
@@ -33,15 +34,22 @@ namespace CategoriseApi.Controllers
     [HttpPost]
     public IActionResult UploadCsv([FromBody]string csvB64)
     {
-      try
+      ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
+      Guid? userId = identity.GetUserId();
+
+      if (userId.HasValue)
       {
-        _transactionUploadService.UploadCsv(csvB64);
-        return NoContent();
+        try
+        {
+          _transactionUploadService.UploadCsv(csvB64, userId.Value);
+          return NoContent();
+        }
+        catch (Exception ex)
+        {
+          return BadRequest(ex.Message);
+        }
       }
-      catch (Exception ex)
-      {
-        return BadRequest(ex.Message);
-      }
+      return BadRequest("User ID unable to be retrieved from token.");
     }
   }
 }

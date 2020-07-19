@@ -10,7 +10,7 @@ namespace CategoriseApi.Services
 {
   public interface ITransactionUploadService
   {
-    void UploadCsv(string b64Content);
+    void UploadCsv(string b64Content, Guid userId);
   }
 
   public class TransactionUploadService : ITransactionUploadService
@@ -26,17 +26,17 @@ namespace CategoriseApi.Services
       _accountService = new AccountService(context);
     }
 
-    public void UploadCsv(string b64Content)
+    public void UploadCsv(string b64Content, Guid userId)
     {
       string csvContent = GetCsvContent(b64Content);
 
       string accountRow = csvContent.Split('\n')[1];
-      Account account = GetAccount(accountRow);
+      Account account = GetAccount(accountRow, userId);
 
       List<string> exportedRows = csvContent.Split('\n').Skip(6).ToList();
       exportedRows = exportedRows.Where(r => !string.IsNullOrEmpty(r)).ToList();
 
-      ProcessRows(exportedRows, account);
+      ProcessRows(exportedRows, account.Id, userId);
     }
 
     private string GetCsvContent(string b64Content)
@@ -46,23 +46,23 @@ namespace CategoriseApi.Services
       return decodedString;
     }
 
-    private Account GetAccount(string accountRow)
+    private Account GetAccount(string accountRow, Guid userId)
     {
       int startIdx = accountRow.IndexOf('(');
       int endIdx = accountRow.IndexOf(')');
       string accountName = accountRow.Substring(startIdx + 1, endIdx - startIdx - 1);
 
-      Account account = _accountService.GetAccountByName(accountName);
+      Account account = _accountService.GetAccountByName(accountName, userId);
 
       if (account == null)
       {
-        account = _accountService.CreateAccount(accountName, null);
+        account = _accountService.CreateAccount(accountName, userId);
       }
 
       return account;
     }
 
-    private void ProcessRows(List<string> transactionRows, Account account)
+    private void ProcessRows(List<string> transactionRows, Guid accountId, Guid userId)
     {
       foreach(var row in transactionRows)
       {
@@ -73,7 +73,8 @@ namespace CategoriseApi.Services
           TransactionDate = new DateTime(int.Parse(transactionDate[0]), int.Parse(transactionDate[1]), int.Parse(transactionDate[2])),
           TransactionType = rowAttributes[3].Replace("\r", ""),
           Amount = decimal.Parse(rowAttributes[6]),
-          Account = account
+          AccountId = accountId,
+          UserId = userId
         };
 
         _transactionService.CreateTransaction(transaction);
