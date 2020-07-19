@@ -25,11 +25,13 @@ namespace CategoriseApi.Controllers
   {
     private CategoriseContext _context;
     private CategoryService _categoryService;
+    private IMapper _mapper;
 
-    public CategoryController(CategoriseContext context)
+    public CategoryController(CategoriseContext context, IMapper mapper)
     {
       _context = context;
       _categoryService = new CategoryService(context);
+      _mapper = mapper;
     }
 
     [HttpGet]
@@ -59,6 +61,21 @@ namespace CategoriseApi.Controllers
         {
           return NotFound();
         }
+        return Ok(category);
+      }
+      return BadRequest("User ID unable to be retrieved from token.");
+    }
+
+    [HttpPost]
+    public IActionResult CreateCategory(CategoryDto categoryDto)
+    {
+      ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
+      Guid? userId = identity.GetUserId();
+
+      if (userId.HasValue)
+      {
+        Category category = _mapper.Map<Category>(categoryDto);
+        category = _categoryService.CreateCategory(category, userId.Value);
         return Ok(category);
       }
       return BadRequest("User ID unable to be retrieved from token.");
