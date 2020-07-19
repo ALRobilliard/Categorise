@@ -64,8 +64,11 @@ namespace CategoriseApi.Controllers
       return BadRequest("User ID unable to be retrieved from token.");
     }
 
-    public IActionResult UpdateCategory(Category categoryParam)
+    [HttpPut("{id}")]
+    public IActionResult UpdateCategory(Guid categoryId, Category categoryParam)
     {
+      if (categoryId != categoryParam.Id) return BadRequest();
+
       ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
       Guid? userId = identity.GetUserId();
 
@@ -84,6 +87,7 @@ namespace CategoriseApi.Controllers
       return BadRequest("User ID unable to be retrieved from token.");
     }
 
+    [HttpDelete("{id}")]
     public IActionResult DeleteCategory(Guid id)
     {
       ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -104,6 +108,8 @@ namespace CategoriseApi.Controllers
       return BadRequest("User ID unable to be retrieved from token.");
     }
 
+    [HttpGet]
+    [Route("search")]
     public IActionResult SearchCategories(string categoryName)
     {
       ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
