@@ -49,7 +49,7 @@ namespace CategoriseApi
             }
             else if (_currentEnvironment.IsProduction())
             {
-                _connectionString = Configuration["DATABASE_URL"];
+                _connectionString = ParseConnectionUri(Configuration["DATABASE_URL"]);
             }
 
             services.AddDbContext<CategoriseContext>(options =>
@@ -107,6 +107,13 @@ namespace CategoriseApi
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private static string ParseConnectionUri(string connectionUri)
+        {
+            var splitString = connectionUri.Split(new string[] {"postgres://", ":", "@", "/" }, StringSplitOptions.None);
+            var connectionString = $"Host={splitString[3]};Database={splitString[5]};Port={splitString[4]};Username={splitString[1]};Password={splitString[2]}";
+            return connectionString;
         }
     }
 }
