@@ -25,31 +25,39 @@ namespace CategoriseApi
     public class Startup
     {
         private static string _connectionString;
-
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            _currentEnvironment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _currentEnvironment;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
-            var builder = new NpgsqlConnectionStringBuilder(
+            if (_currentEnvironment.IsDevelopment())
+            {
+                var builder = new NpgsqlConnectionStringBuilder(
                 Configuration.GetConnectionString("CategoriseContext"));
-            builder.Username = Configuration["DbUser"];
-            builder.Password = Configuration["DbPassword"];
-            _connectionString = builder.ConnectionString;
+                builder.Username = Configuration["DbUser"];
+                builder.Password = Configuration["DbPassword"];
+                _connectionString = builder.ConnectionString;
+            }
+            else if (_currentEnvironment.IsProduction())
+            {
+                _connectionString = Configuration["DATABASE_URL"];
+            }
 
             services.AddDbContext<CategoriseContext>(options =>
                 options.UseNpgsql(_connectionString));
             services.AddAutoMapper(typeof(Startup));
 
             // Configure JWT authentication.
-            var key = Encoding.ASCII.GetBytes(Configuration["AppSecret"]);
+            var key = Encoding.ASCII.GetBytes(Configuration["APP_SECRET"]);
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
