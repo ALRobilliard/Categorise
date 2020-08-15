@@ -8,6 +8,9 @@ using CategoriseApi.Extensions;
 
 namespace CategoriseApi.Controllers
 {
+  /// <summary>
+  /// This controller exposes CRUD actions for the Transactions table.
+  /// </summary>
   [Authorize]
   [ApiController]
   [Route("api/[controller]")]
@@ -16,12 +19,19 @@ namespace CategoriseApi.Controllers
     private CategoriseContext _context;
     private TransactionUploadService _transactionUploadService;
 
+    /// <summary>
+    /// Constructor for the TransactionsController.
+    /// </summary>
     public TransactionsController(CategoriseContext context)
     { 
       _context = context;
       _transactionUploadService = new TransactionUploadService(context);
     }
 
+    /// <summary>
+    /// Endpoint for bulk uploading transactions from a formatted CSV file.
+    /// </summary>
+    /// <param name="csvB64">Base64 string of the input CSV file.</param>
     [HttpPost]
     [Route("upload-csv")]
     public IActionResult UploadCsv([FromBody]string csvB64)

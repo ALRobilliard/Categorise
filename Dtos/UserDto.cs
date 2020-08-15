@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace CategoriseApi.Dtos
 {
   /// <summary>
-  /// Data transfer unit for User Authentication.
+  /// Data transfer object for User Authentication.
   /// </summary>
   public class UserAuthDto
   {
@@ -21,7 +21,7 @@ namespace CategoriseApi.Dtos
   }
 
   /// <summary>
-  /// Data transfer unit for User Registration.
+  /// Data transfer object for User Registration.
   /// </summary>
   public class UserRegisterDto
   {

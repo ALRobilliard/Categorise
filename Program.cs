@@ -11,8 +11,14 @@ using CategoriseApi.Extensions;
 
 namespace CategoriseApi
 {
+    /// <summary>
+    /// Program class.
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Program main method.
+        /// </summary>
         public static void Main(string[] args)
         {
             CreateHostBuilder(args)
@@ -21,6 +27,9 @@ namespace CategoriseApi
                 .Run();
         }
 
+        /// <summary>
+        /// Creates a HostBuilder for resource encapsulation.
+        /// </summary>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>

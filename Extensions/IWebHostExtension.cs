@@ -7,8 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CategoriseApi.Extensions
 {
+  /// <summary>
+  /// Extension class for IHost.
+  /// </summary>
   public static class IHostExtension
   {
+    /// <summary>
+    /// Migrates the defined DbContext to the specified database.
+    /// </summary>
+    /// <param name="host">The current IHost object.</param>
     public static IHost MigrateDatabase<T>(this IHost host) where T : DbContext
     {
       using (var scope = host.Services.CreateScope())
