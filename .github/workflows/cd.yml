@@ -1,0 +1,28 @@
+name: Continuous Deployment
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+env:
+  NETCORE_VERSION: '3.1.300'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Continuous Deployment
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Login to Heroku
+        run: docker login --username=_ --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
+      - name: Build docker image
+        run: docker build -t categoriseapi .
+      - name: Push to image to Heroku
+        run: heroku container:push web
+      - name: Release image
+        run: heroku container:release web
+      - name: Logout of Heroku
+        run: docker logout
