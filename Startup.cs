@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using AutoMapper;
 using Npgsql;
 using CategoriseApi.Helpers;
@@ -43,8 +44,8 @@ namespace CategoriseApi
             {
                 var builder = new NpgsqlConnectionStringBuilder(
                 Configuration.GetConnectionString("CategoriseContext"));
-                builder.Username = Configuration["DbUser"];
-                builder.Password = Configuration["DbPassword"];
+                builder.Username = Configuration["DB_USER"];
+                builder.Password = Configuration["DB_PASSWORD"];
                 _connectionString = builder.ConnectionString;
             }
             else if (_currentEnvironment.IsProduction())
@@ -89,6 +90,33 @@ namespace CategoriseApi
                 };
             });
             services.AddScoped<IUserService, UserService>();
+            services.AddSwaggerGen(options => {
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,6 +134,10 @@ namespace CategoriseApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Categorise API V1");
             });
         }
 
