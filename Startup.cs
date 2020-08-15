@@ -43,8 +43,8 @@ namespace CategoriseApi
             {
                 var builder = new NpgsqlConnectionStringBuilder(
                 Configuration.GetConnectionString("CategoriseContext"));
-                builder.Username = Configuration["DbUser"];
-                builder.Password = Configuration["DbPassword"];
+                builder.Username = Configuration["DB_USER"];
+                builder.Password = Configuration["DB_PASSWORD"];
                 _connectionString = builder.ConnectionString;
             }
             else if (_currentEnvironment.IsProduction())
@@ -89,6 +89,7 @@ namespace CategoriseApi
                 };
             });
             services.AddScoped<IUserService, UserService>();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -106,6 +107,10 @@ namespace CategoriseApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Categorise API V1");
             });
         }
 
