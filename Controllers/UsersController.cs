@@ -35,7 +35,7 @@ namespace CategoriseApi.Controllers
     // POST: api/users/authenticate
     [AllowAnonymous]
     [HttpPost("authenticate")]
-    public IActionResult Authenticate([FromBody]UserDto userDto)
+    public IActionResult Authenticate([FromBody]UserAuthDto userDto)
     {
       var user = _userService.Authenticate(userDto.Email, userDto.Password);
 
@@ -77,7 +77,7 @@ namespace CategoriseApi.Controllers
     // POST: api/users/register
     [AllowAnonymous]
     [HttpPost("register")]
-    public IActionResult Register([FromBody]UserDto userDto)
+    public IActionResult Register([FromBody]UserRegisterDto userDto)
     {
       // Map dto to entity.
       var user = _mapper.Map<User>(userDto);

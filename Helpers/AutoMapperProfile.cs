@@ -9,7 +9,7 @@ namespace CategoriseApi.Helpers
     public AutoMapperProfile()
     {
       CreateMap<CategoryDto, Category>();
-      CreateMap<UserDto, User>();
+      CreateMap<UserRegisterDto, User>();
     }
   }
 }
