@@ -1,0 +1,30 @@
+name: Continuous Integration
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+env:
+  NETCORE_VERSION: '3.1.300'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Continuous Integration
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET Core SDK ${{ env.NETCORE_VERSION }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.NETCORE_VERSION }}
+      - name: Restore packages
+        run: dotnet restore
+      - name: Build app
+        run: dotnet build --configuration Release --no-restore
+      - name: Run tests
+        run: dotnet test --no-build
+      - name: Publish app for deploy
+        run: dotnet publish -c Release -o out
