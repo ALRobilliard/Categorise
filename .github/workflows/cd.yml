@@ -18,8 +18,8 @@ jobs:
       - name: Build docker image
         run: docker build -t categoriseapi .
       - name: Push to image to Heroku
-        run: heroku container:push web
+        run: heroku container:push web -a categorise
       - name: Release image
-        run: heroku container:release web
+        run: heroku container:release web -a categorise
       - name: Logout of Heroku
         run: docker logout
