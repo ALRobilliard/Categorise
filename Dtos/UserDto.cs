@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace CategoriseApi.Dtos
 {
   /// <summary>
@@ -8,11 +10,13 @@ namespace CategoriseApi.Dtos
     /// <summary>
     /// Gets or sets the User email address.
     /// </summary>
+    [Required]
     public string Email { get; set; }
 
     /// <summary>
     /// Gets or sets the User password.
     /// </summary>
+    [Required]
     public string Password { get; set; }
   }
 
@@ -24,21 +28,25 @@ namespace CategoriseApi.Dtos
     /// <summary>
     /// Gets or sets the User first name.
     /// </summary>
+    [Required]
     public string FirstName { get; set; }
 
     /// <summary>
     /// Gets or sets the User last name.
     /// </summary>
+    [Required]
     public string LastName { get; set; }
 
     /// <summary>
     /// Gets or sets the User email address.
     /// </summary>
+    [Required]
     public string Email { get; set; }
 
     /// <summary>
     /// Gets or sets the User password.
     /// </summary>
+    [Required]
     public string Password { get; set; }
   }
 }

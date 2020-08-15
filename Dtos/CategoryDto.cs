@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace CategoriseApi.Dtos
 {
@@ -15,6 +16,7 @@ namespace CategoriseApi.Dtos
     /// <summary>
     /// Gets or sets the category name.
     /// </summary>
+    [Required]
     public string CategoryName { get; set; }
   }
 }
