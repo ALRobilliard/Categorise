@@ -14,12 +14,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Login to Heroku
-        run: docker login --username=_ --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
       - name: Build docker image
         run: docker build -t categoriseapi .
       - name: Push to image to Heroku
-        run: heroku container:push web -a categorise
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:push -a ${{ secrets.APP_NAME }} web
       - name: Release image
-        run: heroku container:release web -a categorise
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:release -a ${{ secrets.APP_NAME }} web
       - name: Logout of Heroku
-        run: docker logout
+        run: heroku container:logout
