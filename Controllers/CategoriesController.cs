@@ -1,17 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using CategoriseApi.Dtos;
-using CategoriseApi.Helpers;
 using CategoriseApi.Models;
 using CategoriseApi.Services;
 using CategoriseApi.Extensions;
@@ -21,13 +14,13 @@ namespace CategoriseApi.Controllers
   [Authorize]
   [ApiController]
   [Route("api/[controller]")]
-  public class CategoryController : ControllerBase
+  public class CategoriesController : ControllerBase
   {
     private CategoriseContext _context;
     private CategoryService _categoryService;
     private IMapper _mapper;
 
-    public CategoryController(CategoriseContext context, IMapper mapper)
+    public CategoriesController(CategoriseContext context, IMapper mapper)
     {
       _context = context;
       _categoryService = new CategoryService(context);
