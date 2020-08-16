@@ -8,17 +8,29 @@ using CategoriseApi.Services;
 
 namespace CategoriseApi.Services
 {
+  /// <summary>
+  /// Service for exposing upload actions for Transaction.
+  /// </summary>
   public interface ITransactionUploadService
   {
+    /// <summary>
+    /// Creates bulk transactions from CSV input.
+    /// </summary>
     void UploadCsv(string b64Content, Guid userId);
   }
 
+  /// <summary>
+  /// Service for exposing upload actions for Transaction.
+  /// </summary>
   public class TransactionUploadService : ITransactionUploadService
   {
     private CategoriseContext _context;
     private TransactionService _transactionService;
     private AccountService _accountService;
 
+    /// <summary>
+    /// Constructor for TransactionUploadService.
+    /// </summary>
     public TransactionUploadService(CategoriseContext context)
     {
       _context = context;
@@ -26,6 +38,9 @@ namespace CategoriseApi.Services
       _accountService = new AccountService(context);
     }
 
+    /// <summary>
+    /// Creates bulk transactions from CSV input.
+    /// </summary>   
     public void UploadCsv(string b64Content, Guid userId)
     {
       string csvContent = GetCsvContent(b64Content);

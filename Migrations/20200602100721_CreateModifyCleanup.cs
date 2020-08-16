@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#pragma warning disable 1591
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CategoriseApi.Migrations
 {
@@ -15,3 +16,4 @@ namespace CategoriseApi.Migrations
         }
     }
 }
+#pragma warning restore 1591
