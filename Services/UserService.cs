@@ -53,6 +53,7 @@ namespace CategoriseApi.Services
   public class UserService : IUserService
   {
     private CategoriseContext _context;
+    private ConfigSettingService _configSettingService;
 
     /// <summary>
     /// Constructor for UserService.
@@ -60,6 +61,7 @@ namespace CategoriseApi.Services
     public UserService(CategoriseContext context)
     {
       _context = context;
+      _configSettingService = new ConfigSettingService(context);
     }
 
     /// <summary>
@@ -119,6 +121,13 @@ namespace CategoriseApi.Services
     /// </summary>
     public User CreateUser(User user, string password)
     {
+      // Check global ConfigSetting.
+      var allowRegistrations = _configSettingService.GetConfigSettingByName("AllowRegistrations");
+      if (allowRegistrations == null || allowRegistrations.Value != "true")
+      {
+        throw new AppException("We are not currently accepting new users.");
+      }
+
       // Validation
       if (string.IsNullOrWhiteSpace(password))
       {
