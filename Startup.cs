@@ -129,11 +129,10 @@ namespace CategoriseApi
         /// <summary>
         /// Called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, CategoriseContext context, IWebHostEnvironment env)
         {
-            // Store context.
-            var context = app.ApplicationServices.GetService<CategoriseContext>();
-
+            CreateDefaultConfig(context);
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
