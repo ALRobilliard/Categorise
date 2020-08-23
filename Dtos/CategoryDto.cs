@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace CategoriseApi.Dtos
 {
   /// <summary>
-  /// Data transfer unit for Category.
+  /// Data transfer object for Category.
   /// </summary>
   public class CategoryDto
   {

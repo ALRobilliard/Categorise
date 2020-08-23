@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using CategoriseApi.Dtos;
@@ -16,6 +14,9 @@ using CategoriseApi.Services;
 
 namespace CategoriseApi.Controllers
 {
+  /// <summary>
+  /// This controller exposes management actions for the Users table.
+  /// </summary>
   [Authorize]
   [ApiController]
   [Route("api/[controller]")]
@@ -25,6 +26,9 @@ namespace CategoriseApi.Controllers
     private IConfiguration _config;
     private IMapper _mapper;
 
+    /// <summary>
+    /// Constructor for the UsersController.
+    /// </summary>
     public UsersController(IUserService userService, IConfiguration configuration, IMapper mapper)
     {
       _userService = userService;
@@ -32,7 +36,10 @@ namespace CategoriseApi.Controllers
       _mapper = mapper;
     }
 
-    // POST: api/users/authenticate
+    /// <summary>
+    /// Endpoint for user authentication. When passed valid parameters, returns a JWT token for the user.
+    /// </summary>
+    /// <param name="userDto">Data transfer object for the user to authenticate.</param>
     [AllowAnonymous]
     [HttpPost("authenticate")]
     public IActionResult Authenticate([FromBody]UserAuthDto userDto)
@@ -74,7 +81,10 @@ namespace CategoriseApi.Controllers
       });
     }
 
-    // POST: api/users/register
+    /// <summary>
+    /// Endpoint for user registration.
+    /// </summary>
+    /// <param name="userDto">Data transfer object for the user to register.</param>
     [AllowAnonymous]
     [HttpPost("register")]
     public IActionResult Register([FromBody]UserRegisterDto userDto)

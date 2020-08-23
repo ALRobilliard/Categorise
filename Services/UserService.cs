@@ -6,26 +6,67 @@ using CategoriseApi.Models;
 
 namespace CategoriseApi.Services
 {
+  /// <summary>
+  /// Service for exposing common actions for User.
+  /// </summary>
   public interface IUserService
   {
+    /// <summary>
+    /// Authenticates a user using email and password.
+    /// </summary>
     User Authenticate (string email, string password);
+    
+    /// <summary>
+    /// Retrieve all users.
+    /// </summary>    
     IEnumerable<User> GetUsers();
+
+    /// <summary>
+    /// Retrieve a single user by user unique identifier.
+    /// </summary>
     User GetUserById(Guid id);
+
+    /// <summary>
+    /// Retrieve a single user by user email.
+    /// </summary>
     User GetUserByEmail(string email);
+
+    /// <summary>
+    /// Creates a single user.
+    /// </summary>
     User CreateUser(User user, string password);
+
+    /// <summary>
+    /// Updates a single user.
+    /// </summary>
     void UpdateUser(User user, string password = null);
+
+    /// <summary>
+    /// Deletes a single user.
+    /// </summary>
     void DeleteUser(Guid id);
   }
 
+  /// <summary>
+  /// Service for exposing common actions for User.
+  /// </summary>
   public class UserService : IUserService
   {
     private CategoriseContext _context;
+    private ConfigSettingService _configSettingService;
 
+    /// <summary>
+    /// Constructor for UserService.
+    /// </summary>
     public UserService(CategoriseContext context)
     {
       _context = context;
+      _configSettingService = new ConfigSettingService(context);
     }
 
+    /// <summary>
+    /// Authenticates a user using email and password.
+    /// </summary>
     public User Authenticate(string email, string password)
     {
       if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
@@ -51,23 +92,42 @@ namespace CategoriseApi.Services
       return user;
     }
 
+    /// <summary>
+    /// Retrieve all users.
+    /// </summary>    
     public IEnumerable<User> GetUsers()
     {
       return _context.Users;
     }
 
+    /// <summary>
+    /// Retrieve a single user by user unique identifier.
+    /// </summary>
     public User GetUserById(Guid id)
     {
       return _context.Users.Find(id);
     }
 
+    /// <summary>
+    /// Retrieve a single user by user email.
+    /// </summary>
     public User GetUserByEmail(string email)
     {
       return _context.Users.Where(u => u.Email == email).Single();
     }
 
+    /// <summary>
+    /// Creates a single user.
+    /// </summary>
     public User CreateUser(User user, string password)
     {
+      // Check global ConfigSetting.
+      var allowRegistrations = _configSettingService.GetConfigSettingByName("AllowRegistrations");
+      if (allowRegistrations == null || allowRegistrations.Value != "true")
+      {
+        throw new AppException("We are not currently accepting new users.");
+      }
+
       // Validation
       if (string.IsNullOrWhiteSpace(password))
       {
@@ -91,6 +151,9 @@ namespace CategoriseApi.Services
       return user;
     }
 
+    /// <summary>
+    /// Updates a single user.
+    /// </summary>
     public void UpdateUser(User userParam, string password = null)
     {
       var user = _context.Users.Find(userParam.Id);
@@ -128,6 +191,9 @@ namespace CategoriseApi.Services
       _context.SaveChanges();
     }
 
+    /// <summary>
+    /// Deletes a single user.
+    /// </summary>
     public void DeleteUser(Guid id)
     {
       var user = _context.Users.Find(id);

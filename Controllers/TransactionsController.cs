@@ -1,37 +1,39 @@
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using AutoMapper;
-using CategoriseApi.Dtos;
-using CategoriseApi.Helpers;
 using CategoriseApi.Models;
 using CategoriseApi.Services;
 using CategoriseApi.Extensions;
 
 namespace CategoriseApi.Controllers
 {
+  /// <summary>
+  /// This controller exposes CRUD actions for the Transactions table.
+  /// </summary>
   [Authorize]
   [ApiController]
   [Route("api/[controller]")]
-  public class UploadTransactionController : ControllerBase
+  public class TransactionsController : ControllerBase
   {
     private CategoriseContext _context;
     private TransactionUploadService _transactionUploadService;
 
-    public UploadTransactionController(CategoriseContext context)
+    /// <summary>
+    /// Constructor for the TransactionsController.
+    /// </summary>
+    public TransactionsController(CategoriseContext context)
     { 
       _context = context;
       _transactionUploadService = new TransactionUploadService(context);
     }
 
+    /// <summary>
+    /// Endpoint for bulk uploading transactions from a formatted CSV file.
+    /// </summary>
+    /// <param name="csvB64">Base64 string of the input CSV file.</param>
     [HttpPost]
+    [Route("upload-csv")]
     public IActionResult UploadCsv([FromBody]string csvB64)
     {
       ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;

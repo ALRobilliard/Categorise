@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CategoriseApi.Migrations
 {
     [DbContext(typeof(CategoriseContext))]
-    [Migration("20200602100721_CreateModifyCleanup")]
-    partial class CreateModifyCleanup
+    [Migration("20200823075059_ConfigSettings")]
+    partial class ConfigSettings
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace CategoriseApi.Migrations
 
             modelBuilder.Entity("CategoriseApi.Models.Account", b =>
                 {
-                    b.Property<Guid>("AccountId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -45,7 +45,7 @@ namespace CategoriseApi.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("AccountId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserForeignKey");
 
@@ -54,7 +54,7 @@ namespace CategoriseApi.Migrations
 
             modelBuilder.Entity("CategoriseApi.Models.Category", b =>
                 {
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -75,16 +75,42 @@ namespace CategoriseApi.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserForeignKey");
 
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("CategoriseApi.Models.ConfigSetting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("character varying(25)")
+                        .HasMaxLength(25);
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConfigSettings");
+                });
+
             modelBuilder.Entity("CategoriseApi.Models.Transaction", b =>
                 {
-                    b.Property<Guid>("TransactionId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -112,6 +138,9 @@ namespace CategoriseApi.Migrations
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<string>("TransactionType")
                         .IsRequired()
                         .HasColumnType("character varying(25)")
@@ -123,7 +152,7 @@ namespace CategoriseApi.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("TransactionId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AccountForeignKey");
 
@@ -136,7 +165,7 @@ namespace CategoriseApi.Migrations
 
             modelBuilder.Entity("CategoriseApi.Models.TransactionNote", b =>
                 {
-                    b.Property<Guid>("TransactionNoteId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -167,7 +196,7 @@ namespace CategoriseApi.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("TransactionNoteId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TransactionForeignKey");
 
@@ -178,7 +207,7 @@ namespace CategoriseApi.Migrations
 
             modelBuilder.Entity("CategoriseApi.Models.TransactionParty", b =>
                 {
-                    b.Property<Guid>("TransactionPartyId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -205,7 +234,7 @@ namespace CategoriseApi.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("TransactionPartyId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TransactionForeignKey");
 
@@ -216,7 +245,7 @@ namespace CategoriseApi.Migrations
 
             modelBuilder.Entity("CategoriseApi.Models.TransactionTag", b =>
                 {
-                    b.Property<Guid>("TransactionTagId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -243,7 +272,7 @@ namespace CategoriseApi.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("TransactionTagId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TransactionForeignKey");
 
@@ -254,7 +283,7 @@ namespace CategoriseApi.Migrations
 
             modelBuilder.Entity("CategoriseApi.Models.User", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -294,7 +323,7 @@ namespace CategoriseApi.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("bytea");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });

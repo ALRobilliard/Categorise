@@ -79,6 +79,32 @@ namespace CategoriseApi.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("CategoriseApi.Models.ConfigSetting", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("character varying(25)")
+                        .HasMaxLength(25);
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ConfigSettings");
+                });
+
             modelBuilder.Entity("CategoriseApi.Models.Transaction", b =>
                 {
                     b.Property<Guid>("Id")

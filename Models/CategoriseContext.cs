@@ -1,35 +1,81 @@
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CategoriseApi.Models
 {
+  /// <summary>
+  /// DbContext for Categorise.
+  /// </summary>
   public class CategoriseContext : DbContext
   {
     private readonly string _connectionString;
 
+    /// <summary>
+    /// Constructor CategoriseContext.
+    /// </summary>
     public CategoriseContext()
     {
     }
 
+    /// <summary>
+    /// Constructor CategoriseContext.
+    /// </summary>
     public CategoriseContext(DbContextOptions<CategoriseContext> options) : base (options)
     {
     }
 
+    /// <summary>
+    /// Constructor CategoriseContext.
+    /// </summary>
     public CategoriseContext(string connectionString)
     {
       this._connectionString = connectionString;
     }
 
+    /// <summary>
+    /// Account DbSet.
+    /// </summary>
     public virtual DbSet<Account> Accounts { get; set; }
+
+    /// <summary>
+    /// Category DbSet.
+    /// </summary>
     public virtual DbSet<Category> Categories { get; set; }
+
+    /// <summary>
+    /// Config setting DbSet.
+    /// </summary>
+    public virtual DbSet<ConfigSetting> ConfigSettings { get; set; }
+
+    /// <summary>
+    /// Transaction DbSet.
+    /// </summary>
     public virtual DbSet<Transaction> Transactions { get; set; }
+
+    /// <summary>
+    /// Transaction note DbSet.
+    /// </summary>
     public virtual DbSet<TransactionNote> TransactionNotes { get; set; }
+
+    /// <summary>
+    /// Transaction party DbSet.
+    /// </summary>
     public virtual DbSet<TransactionParty> TransactionParties { get; set; }
+
+    /// <summary>
+    /// Transaction tag DbSet.
+    /// </summary>
     public virtual DbSet<TransactionTag> TransactionTags { get; set; }
+
+    /// <summary>
+    /// User DbSet.
+    /// </summary>
     public virtual DbSet<User> Users { get; set; }
 
+    /// <summary>
+    /// OnConfiguring method.
+    /// </summary>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       if (!optionsBuilder.IsConfigured)
@@ -38,6 +84,9 @@ namespace CategoriseApi.Models
       }
     }
 
+    /// <summary>
+    /// Handles methods to be executed on save of records.
+    /// </summary>
     public override int SaveChanges()
     {
       var entries = ChangeTracker

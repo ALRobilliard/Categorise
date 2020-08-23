@@ -1,39 +1,41 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using CategoriseApi.Dtos;
-using CategoriseApi.Helpers;
 using CategoriseApi.Models;
 using CategoriseApi.Services;
 using CategoriseApi.Extensions;
 
 namespace CategoriseApi.Controllers
 {
+  /// <summary>
+  /// This controller exposes CRUD actions for the Category table.
+  /// </summary>
   [Authorize]
   [ApiController]
   [Route("api/[controller]")]
-  public class CategoryController : ControllerBase
+  public class CategoriesController : ControllerBase
   {
     private CategoriseContext _context;
     private CategoryService _categoryService;
     private IMapper _mapper;
 
-    public CategoryController(CategoriseContext context, IMapper mapper)
+    /// <summary>
+    /// Constructor for the CategoriesController.
+    /// </summary>
+    public CategoriesController(CategoriseContext context, IMapper mapper)
     {
       _context = context;
       _categoryService = new CategoryService(context);
       _mapper = mapper;
     }
 
+    /// <summary>
+    /// Returns all categories for the authenticated user.
+    /// </summary>
     [HttpGet]
     public IActionResult GetCategories()
     {
@@ -47,6 +49,10 @@ namespace CategoriseApi.Controllers
       return BadRequest("User ID unable to be retrieved from token.");
     }
 
+    /// <summary>
+    /// Returns the specified category for the authenticated user.
+    /// </summary>
+    /// <param name="id">Unique identifier of the requested category.</param>
     [HttpGet("{id}")]
     public IActionResult GetCategory(Guid id)
     {
@@ -66,6 +72,10 @@ namespace CategoriseApi.Controllers
       return BadRequest("User ID unable to be retrieved from token.");
     }
 
+    /// <summary>
+    /// Creates a category owned by the authenticated user.
+    /// </summary>
+    /// <param name="categoryDto">Data transfer object for the category to be created.</param>
     [HttpPost]
     public IActionResult CreateCategory(CategoryDto categoryDto)
     {
@@ -81,6 +91,11 @@ namespace CategoriseApi.Controllers
       return BadRequest("User ID unable to be retrieved from token.");
     }
 
+    /// <summary>
+    /// Updates a category owned by the authenticated user.
+    /// </summary>
+    /// <param name="categoryId">Unique identifier of the requested category.</param>
+    /// <param name="categoryParam">Category model to be updated.</param>
     [HttpPut("{id}")]
     public IActionResult UpdateCategory(Guid categoryId, Category categoryParam)
     {
@@ -104,6 +119,10 @@ namespace CategoriseApi.Controllers
       return BadRequest("User ID unable to be retrieved from token.");
     }
 
+    /// <summary>
+    /// Deletes a category owned by the authenticated user.
+    /// </summary>
+    /// <param name="id">Unique identifier of the requested category.</param>
     [HttpDelete("{id}")]
     public IActionResult DeleteCategory(Guid id)
     {
@@ -125,6 +144,10 @@ namespace CategoriseApi.Controllers
       return BadRequest("User ID unable to be retrieved from token.");
     }
 
+    /// <summary>
+    /// Returns a list of categories for the authenticated user, based on the search parameter.
+    /// </summary>
+    /// <param name="categoryName">Category search term.</param>
     [HttpGet]
     [Route("search")]
     public IActionResult SearchCategories(string categoryName)
