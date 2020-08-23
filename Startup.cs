@@ -131,6 +131,9 @@ namespace CategoriseApi
         /// </summary>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Store context.
+            var context = app.ApplicationServices.GetService<CategoriseContext>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -155,6 +158,14 @@ namespace CategoriseApi
             var splitString = connectionUri.Split(new string[] {"postgres://", ":", "@", "/" }, StringSplitOptions.None);
             var connectionString = $"Host={splitString[3]};Database={splitString[5]};Port={splitString[4]};Username={splitString[1]};Password={splitString[2]}";
             return connectionString;
+        }
+
+        private void CreateDefaultConfig(CategoriseContext context)
+        {
+            ConfigSettingService configSettingService = new ConfigSettingService(context);
+
+            // Create required configs (safely).
+            configSettingService.CreateConfigSetting("AllowRegistrations", "false", true);
         }
     }
 }
