@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CategoriseApi.Models
 {
@@ -43,6 +42,11 @@ namespace CategoriseApi.Models
     /// Category DbSet.
     /// </summary>
     public virtual DbSet<Category> Categories { get; set; }
+
+    /// <summary>
+    /// Config setting DbSet.
+    /// </summary>
+    public virtual DbSet<ConfigSetting> ConfigSettings { get; set; }
 
     /// <summary>
     /// Transaction DbSet.
