@@ -52,7 +52,7 @@ namespace CategoriseApi.Controllers
       }
 
       var tokenHandler = new JwtSecurityTokenHandler();
-      var key = Encoding.ASCII.GetBytes(_config["AppSecret"]);
+      var key = Encoding.ASCII.GetBytes(_config["APP_SECRET"]);
       var tokenDescriptor = new SecurityTokenDescriptor
       {
         Subject = new ClaimsIdentity(new Claim[]
