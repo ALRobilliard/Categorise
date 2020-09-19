@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace CategoriseApi.Models
 {
   /// <summary>
-  /// Account entity model.
+  /// Account Entity Model
   /// </summary>
   public class Account : BaseEntity
   {
@@ -16,6 +16,21 @@ namespace CategoriseApi.Models
     [Required]
     [MaxLength(25)]
     public string AccountName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the account balance.
+    /// </summary>
+    public decimal Balance { get; set; }
+
+    /// <summary>
+    /// Gets or sets the account type.
+    /// </summary>
+    public int AccountType { get; set; }
+
+    /// <summary>
+    /// Gets or sets the credit limit.
+    /// </summary>
+    public decimal? CreditLimit { get; set; }
 
     /// <summary>
     /// Unique identifier for the owning user.
@@ -32,5 +47,21 @@ namespace CategoriseApi.Models
     /// List of transactions associated with this account.
     /// </summary>
     public List<Transaction> Transactions { get; set; }
+  }
+
+  /// <summary>
+  /// Account type enum.
+  /// </summary>
+  public enum AccountType 
+  {
+    /// <summary>
+    /// Credit account type.
+    /// </summary>
+    Credit,
+
+    /// <summary>
+    /// Debit account type.
+    /// </summary>
+    Debit
   }
 }

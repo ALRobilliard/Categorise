@@ -2,90 +2,118 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CategoriseApi.Models;
+using CategoriseApi.Dtos;
 
 namespace CategoriseApi.Services
 {
-  /// <summary>
-  /// Service for exposing common actions for Account.
-  /// </summary>
-  public interface IAccountService
-  {
     /// <summary>
-    /// Retrieve all accounts for the specified user.
+    /// Service for exposing common actions for Account.
     /// </summary>
-    IEnumerable<Account> GetAccounts(Guid userId);
-
-    /// <summary>
-    /// Retrieve a single account for the specified user by account unique identifier.
-    /// </summary>
-    Account GetAccountById(Guid id, Guid userId);
-
-    /// <summary>
-    /// Retrieve a single account for the specified user by account name.
-    /// </summary>
-    Account GetAccountByName(string name, Guid userId);
-
-    /// <summary>
-    /// Creates an account for the specified user.
-    /// </summary>
-    Account CreateAccount(string accountName, Guid userId);
-  }
-
-  /// <summary>
-  /// Service for exposing common actions for Account.
-  /// </summary>
-  public class AccountService : IAccountService
-  {
-    private CategoriseContext _context;
-
-    /// <summary>
-    /// Constructor for the AccountService.
-    /// </summary>
-    public AccountService(CategoriseContext context)
+    public interface IAccountService
     {
-      _context = context;
+        /// <summary>
+        /// Retrieve all accounts for the specified user.
+        /// </summary>
+        IEnumerable<Account> GetAccounts(Guid userId);
+
+        /// <summary>
+        /// Retrieve a single account for the specified user by account unique identifier.
+        /// </summary>
+        Account GetAccountById(Guid id, Guid userId);
+
+        /// <summary>
+        /// Retrieve a single account for the specified user by account name.
+        /// </summary>
+        Account GetAccountByName(string name, Guid userId);
+
+        /// <summary>
+        /// Creates an account for the specified user.
+        /// </summary>
+        Account CreateAccount(AccountDto accountDto, Guid userId);
+
+        /// <summary>
+        /// Updates an account for the specified user.
+        /// </summary>
+        void UpdateAccount(AccountDto accountDto, Guid userId);
     }
 
     /// <summary>
-    /// Retrieve all accounts for the specified user.
+    /// Service for exposing common actions for Account.
     /// </summary>
-    public IEnumerable<Account> GetAccounts(Guid userId)
+    public class AccountService : IAccountService
     {
-      return _context.Accounts.Where(a => a.UserId == userId);
-    }
+        private CategoriseContext _context;
 
-    /// <summary>
-    /// Retrieve a single account for the specified user by account unique identifier.
-    /// </summary>
-    public Account GetAccountById(Guid id, Guid userId)
-    {
-      return _context.Accounts.Where(a => a.Id == id && a.UserId == userId).FirstOrDefault();
-    }
+        /// <summary>
+        /// Constructor for the AccountService.
+        /// </summary>
+        public AccountService(CategoriseContext context)
+        {
+            _context = context;
+        }
 
-    /// <summary>
-    /// Retrieve a single account for the specified user by account name.
-    /// </summary>
-    public Account GetAccountByName(string name, Guid userId)
-    {
-      return _context.Accounts
-        .Where(a => a.AccountName == name && a.UserId == userId).FirstOrDefault();
-    }
+        /// <summary>
+        /// Retrieve all accounts for the specified user.
+        /// </summary>
+        public IEnumerable<Account> GetAccounts(Guid userId)
+        {
+            return _context.Accounts.Where(a => a.UserId == userId);
+        }
 
-    /// <summary>
-    /// Creates an account for the specified user.
-    /// </summary>
-    public Account CreateAccount(string accountName, Guid userId)
-    {
-      Account account = new Account
-      {
-        AccountName = accountName,
-        UserId = userId
-      };
+        /// <summary>
+        /// Retrieve a single account for the specified user by account unique identifier.
+        /// </summary>
+        public Account GetAccountById(Guid id, Guid userId)
+        {
+            return _context.Accounts.Where(a => a.Id == id && a.UserId == userId).FirstOrDefault();
+        }
 
-      _context.Accounts.Add(account);
-      _context.SaveChanges();
-      
-      return account;
+        /// <summary>
+        /// Retrieve a single account for the specified user by account name.
+        /// </summary>
+        public Account GetAccountByName(string name, Guid userId)
+        {
+            return _context.Accounts
+              .Where(a => a.AccountName == name && a.UserId == userId).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Creates an account for the specified user.
+        /// </summary>
+        public Account CreateAccount(AccountDto accountDto, Guid userId)
+        {
+            Account account = new Account
+            {
+                AccountName = accountDto.AccountName,
+                AccountType = accountDto.AccountType,
+                Balance = accountDto.Balance,
+                CreditLimit = accountDto.CreditLimit,
+                UserId = userId
+            };
+
+            _context.Accounts.Add(account);
+            _context.SaveChanges();
+
+            return account;
+        }
+
+        /// <summary>
+        /// Updates an account for the specified user.
+        /// </summary>
+        public void UpdateAccount(AccountDto accountDto, Guid userId)
+        {
+            Account account = _context.Accounts.Find(accountDto.Id);
+
+            if (account != null)
+            {
+                account.AccountName = accountDto.AccountName;
+                account.Balance = accountDto.Balance;
+                account.AccountType = accountDto.AccountType;
+                account.CreditLimit = accountDto.CreditLimit;
+
+                _context.Accounts.Update(account);
+                _context.SaveChanges();
+            }
+        }
     }
-  }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using CategoriseApi.Helpers;
 using CategoriseApi.Models;
 using CategoriseApi.Services;
+using CategoriseApi.Dtos;
 
 namespace CategoriseApi.Services
 {
@@ -71,7 +72,13 @@ namespace CategoriseApi.Services
 
       if (account == null)
       {
-        account = _accountService.CreateAccount(accountName, userId);
+        AccountDto accountDto = new AccountDto 
+        {
+          AccountName = accountName,
+          AccountType = (int)AccountType.Credit,
+          Balance = 0
+        };
+        account = _accountService.CreateAccount(accountDto, userId);
       }
 
       return account;

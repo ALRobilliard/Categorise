@@ -14,6 +14,7 @@ namespace CategoriseApi.Helpers
     /// </summary>
     public AutoMapperProfile()
     {
+      CreateMap<AccountDto, Account>();
       CreateMap<CategoryDto, Category>();
       CreateMap<UserRegisterDto, User>();
     }
