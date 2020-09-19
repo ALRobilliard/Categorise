@@ -70,7 +70,8 @@ namespace CategoriseApi
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options => {
+            }).AddJwtBearer(options =>
+            {
                 options.Events = new JwtBearerEvents
                 {
                     OnTokenValidated = context =>
@@ -88,7 +89,7 @@ namespace CategoriseApi
                 };
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters 
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
@@ -97,7 +98,8 @@ namespace CategoriseApi
                 };
             });
             services.AddScoped<IUserService, UserService>();
-            services.AddSwaggerGen(options => {
+            services.AddSwaggerGen(options =>
+            {
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
@@ -132,7 +134,7 @@ namespace CategoriseApi
         public void Configure(IApplicationBuilder app, CategoriseContext context, IWebHostEnvironment env)
         {
             CreateDefaultConfig(context);
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -152,14 +154,15 @@ namespace CategoriseApi
                 endpoints.MapControllers();
             });
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Categorise API V1");
             });
         }
 
         private static string ParseConnectionUri(string connectionUri)
         {
-            var splitString = connectionUri.Split(new string[] {"postgres://", ":", "@", "/" }, StringSplitOptions.None);
+            var splitString = connectionUri.Split(new string[] { "postgres://", ":", "@", "/" }, StringSplitOptions.None);
             var connectionString = $"Host={splitString[3]};Database={splitString[5]};Port={splitString[4]};Username={splitString[1]};Password={splitString[2]}";
             return connectionString;
         }

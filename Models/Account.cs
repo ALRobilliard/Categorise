@@ -5,63 +5,63 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CategoriseApi.Models
 {
-  /// <summary>
-  /// Account Entity Model
-  /// </summary>
-  public class Account : BaseEntity
-  {
     /// <summary>
-    /// Gets or sets the Account name.
+    /// Account Entity Model
     /// </summary>
-    [Required]
-    [MaxLength(25)]
-    public string AccountName { get; set; }
+    public class Account : BaseEntity
+    {
+        /// <summary>
+        /// Gets or sets the Account name.
+        /// </summary>
+        [Required]
+        [MaxLength(25)]
+        public string AccountName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the account balance.
+        /// </summary>
+        public decimal Balance { get; set; }
+
+        /// <summary>
+        /// Gets or sets the account type.
+        /// </summary>
+        public int AccountType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the credit limit.
+        /// </summary>
+        public decimal? CreditLimit { get; set; }
+
+        /// <summary>
+        /// Unique identifier for the owning user.
+        /// </summary>
+        public Guid UserId { get; set; }
+
+        /// <summary>
+        /// Owning user.
+        /// </summary>
+        [ForeignKey("UserForeignKey")]
+        public User User { get; set; }
+
+        /// <summary>
+        /// List of transactions associated with this account.
+        /// </summary>
+        public List<Transaction> Transactions { get; set; }
+    }
 
     /// <summary>
-    /// Gets or sets the account balance.
+    /// Account type enum.
     /// </summary>
-    public decimal Balance { get; set; }
+    public enum AccountType
+    {
+        /// <summary>
+        /// Credit account type.
+        /// </summary>
+        Credit,
 
-    /// <summary>
-    /// Gets or sets the account type.
-    /// </summary>
-    public int AccountType { get; set; }
-
-    /// <summary>
-    /// Gets or sets the credit limit.
-    /// </summary>
-    public decimal? CreditLimit { get; set; }
-
-    /// <summary>
-    /// Unique identifier for the owning user.
-    /// </summary>
-    public Guid UserId { get; set; }
-
-    /// <summary>
-    /// Owning user.
-    /// </summary>
-    [ForeignKey("UserForeignKey")]
-    public User User { get; set; }
-
-    /// <summary>
-    /// List of transactions associated with this account.
-    /// </summary>
-    public List<Transaction> Transactions { get; set; }
-  }
-
-  /// <summary>
-  /// Account type enum.
-  /// </summary>
-  public enum AccountType 
-  {
-    /// <summary>
-    /// Credit account type.
-    /// </summary>
-    Credit,
-
-    /// <summary>
-    /// Debit account type.
-    /// </summary>
-    Debit
-  }
+        /// <summary>
+        /// Debit account type.
+        /// </summary>
+        Debit
+    }
 }
