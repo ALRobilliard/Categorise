@@ -35,6 +35,13 @@ namespace CategoriseApi.Services
         /// Updates an account for the specified user.
         /// </summary>
         void UpdateAccount(AccountDto accountDto, Guid userId);
+
+        /// <summary>
+        /// Deletes the specified account for the specified user.
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="userId"></param>
+        void DeleteAccount(Guid accountId, Guid userId);
     }
 
     /// <summary>
@@ -112,6 +119,22 @@ namespace CategoriseApi.Services
                 account.CreditLimit = accountDto.CreditLimit;
 
                 _context.Accounts.Update(account);
+                _context.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Deletes the specified account for the specified user.
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="userId"></param>
+        public void DeleteAccount(Guid accountId, Guid userId)
+        {
+            Account account = _context.Accounts.Find(accountId);
+
+            if (account != null)
+            {
+                _context.Accounts.Remove(account);
                 _context.SaveChanges();
             }
         }
