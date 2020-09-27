@@ -30,8 +30,17 @@ namespace CategoriseApi.Migrations
                         .HasColumnType("character varying(25)")
                         .HasMaxLength(25);
 
+                    b.Property<int>("AccountType")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("numeric");
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<decimal?>("CreditLimit")
+                        .HasColumnType("numeric");
 
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
