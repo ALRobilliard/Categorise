@@ -1,4 +1,4 @@
-# Categorise API
+# Categorise
 
 ![Continuous Integration](https://github.com/ALRobilliard/Categorise/workflows/Continuous%20Integration/badge.svg)
 ![Continuous Deployment](https://github.com/ALRobilliard/Categorise/workflows/Continuous%20Deployment/badge.svg)
