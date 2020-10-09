@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CategoriseApi.Models;
-using CategoriseApi.Dtos;
+using Categorise.Models;
+using Categorise.Dtos;
 
-namespace CategoriseApi.Services
+namespace Categorise.Services
 {
     /// <summary>
     /// Service for exposing common actions for Account.

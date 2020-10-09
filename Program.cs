@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using CategoriseApi.Models;
-using CategoriseApi.Extensions;
+using Categorise.Models;
+using Categorise.Extensions;
 
-namespace CategoriseApi
+namespace Categorise
 {
     /// <summary>
     /// Program class.

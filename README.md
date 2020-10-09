@@ -1,7 +1,7 @@
 # Categorise API
 
-![Continuous Integration](https://github.com/ALRobilliard/CategoriseApi/workflows/Continuous%20Integration/badge.svg)
-![Continuous Deployment](https://github.com/ALRobilliard/CategoriseApi/workflows/Continuous%20Deployment/badge.svg)
+![Continuous Integration](https://github.com/ALRobilliard/Categorise/workflows/Continuous%20Integration/badge.svg)
+![Continuous Deployment](https://github.com/ALRobilliard/Categorise/workflows/Continuous%20Deployment/badge.svg)
 
 This is a REST API providing access to a PostgreSQL database containing monetary transaction data.
 

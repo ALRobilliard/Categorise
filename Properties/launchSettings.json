@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "CategoriseApi": {
+    "Categorise": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "weatherforecast",

@@ -4,12 +4,12 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using CategoriseApi.Dtos;
-using CategoriseApi.Models;
-using CategoriseApi.Services;
-using CategoriseApi.Extensions;
+using Categorise.Dtos;
+using Categorise.Models;
+using Categorise.Services;
+using Categorise.Extensions;
 
-namespace CategoriseApi.Controllers
+namespace Categorise.Controllers
 {
     /// <summary>
     /// This controller exposes CRUD actions for the Category table.

@@ -1,8 +1,8 @@
 using AutoMapper;
-using CategoriseApi.Dtos;
-using CategoriseApi.Models;
+using Categorise.Dtos;
+using Categorise.Models;
 
-namespace CategoriseApi.Helpers
+namespace Categorise.Helpers
 {
     /// <summary>
     /// Profile for AutoMapper.

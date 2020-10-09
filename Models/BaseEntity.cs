@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace CategoriseApi.Models
+namespace Categorise.Models
 {
     /// <summary>
     /// Base entity model.

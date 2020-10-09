@@ -18,7 +18,7 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:login
       - name: Build docker image
-        run: docker build -t categoriseapi .
+        run: docker build -t categorise .
       - name: Push to image to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
