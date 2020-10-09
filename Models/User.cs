@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections.Generic;
 
-namespace CategoriseApi.Models
+namespace Categorise.Models
 {
     /// <summary>
     /// User entity model.

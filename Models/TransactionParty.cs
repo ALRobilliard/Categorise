@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CategoriseApi.Models
+namespace Categorise.Models
 {
     /// <summary>
     /// Transaction party entity model.

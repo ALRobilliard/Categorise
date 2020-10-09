@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 
-namespace CategoriseApi.Extensions
+namespace Categorise.Extensions
 {
     /// <summary>
     /// Extension class for IHost.

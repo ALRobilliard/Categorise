@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace CategoriseApi.Models
+namespace Categorise.Models
 {
     /// <summary>
     /// DbContext for Categorise.

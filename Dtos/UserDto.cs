@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CategoriseApi.Dtos
+namespace Categorise.Dtos
 {
     /// <summary>
     /// Data transfer object for User Authentication.

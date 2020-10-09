@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using CategoriseApi.Models;
+using Categorise.Models;
 
-namespace CategoriseApi.Services
+namespace Categorise.Services
 {
     /// <summary>
     /// Service for exposing common actions for Category.
