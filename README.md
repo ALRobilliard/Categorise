@@ -3,16 +3,16 @@
 ![Continuous Integration](https://github.com/ALRobilliard/Categorise/workflows/Continuous%20Integration/badge.svg)
 ![Continuous Deployment](https://github.com/ALRobilliard/Categorise/workflows/Continuous%20Deployment/badge.svg)
 
-This is a REST API providing access to a PostgreSQL database containing monetary transaction data.
+This is a .NET Core project providing a REST API (and soon a Blazor front-end) which interfaces with a PostgreSQL database that contains monetary transaction data.
 
-Once complete, the API will provide functionality for tracking personal spending, with the ability to:
+Once complete, the app will provide functionality for tracking personal spending, with the ability to:
 - Bulk upload transactions from CSV files
 - Categorise individual transactions on upload
 - Create and maintain a list of transaction mappings, for automatic categorisation
 - Re-extract stored transactions
 - Add tags to transactions
 
-## Call Structure
+## API Call Structure
 
 ### GET all
 
