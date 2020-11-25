@@ -1,0 +1,49 @@
+﻿@page "/accounts"
+
+@using Categorise.Models
+@using Categorise.Services
+@inject IAccountService AccountService
+
+<h1>Accounts</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (accounts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Balance</th>
+                <th>Type</th>
+                <th>Credit Limit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var account in accounts)
+            {
+                var accountType = account.AccountType == 0 ? "Credit" : "Debit";
+                var creditLimit = account.CreditLimit == null ? "N/A" : string.Format("{0:C}", account.CreditLimit);
+                <tr>
+                    <td>@account.AccountName</td>
+                    <td>@account.Balance</td>
+                    <td>@accountType</td>
+                    <td>@creditLimit</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Account> accounts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        accounts = AccountService.GetAccounts(Guid.NewGuid());
+    }
+}

@@ -46,6 +46,8 @@ namespace Categorise
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
 
             if (_currentEnvironment.IsDevelopment())
             {
@@ -98,6 +100,7 @@ namespace Categorise
                 };
             });
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddSwaggerGen(options =>
             {
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -139,6 +142,12 @@ namespace Categorise
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
 
             app.UseCors(x => x
                 .AllowAnyOrigin()
@@ -146,12 +155,15 @@ namespace Categorise
                 .AllowAnyHeader());
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/_Host");
             });
             app.UseSwagger();
             app.UseSwaggerUI(c =>
