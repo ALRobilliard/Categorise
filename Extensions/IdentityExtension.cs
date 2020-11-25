@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 
-namespace CategoriseApi.Extensions
+namespace Categorise.Extensions
 {
     /// <summary>
     /// Extension class for ClaimsIdentity.

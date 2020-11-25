@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 #pragma warning disable 1591
-namespace CategoriseApi.Migrations
+namespace Categorise.Migrations
 {
     public partial class NewAccountFields : Migration
     {

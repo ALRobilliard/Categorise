@@ -13,10 +13,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
 using Npgsql;
-using CategoriseApi.Models;
-using CategoriseApi.Services;
+using Categorise.Models;
+using Categorise.Services;
 
-namespace CategoriseApi
+namespace Categorise
 {
     /// <summary>
     /// Startup class.

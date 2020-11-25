@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CategoriseApi.Helpers;
-using CategoriseApi.Models;
-using CategoriseApi.Services;
-using CategoriseApi.Dtos;
+using Categorise.Helpers;
+using Categorise.Models;
+using Categorise.Services;
+using Categorise.Dtos;
 
-namespace CategoriseApi.Services
+namespace Categorise.Services
 {
     /// <summary>
     /// Service for exposing upload actions for Transaction.

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
-using CategoriseApi.Models;
+using Categorise.Models;
 
-namespace CategoriseApi.Services
+namespace Categorise.Services
 {
     /// <summary>
     /// Service for exposing common actions for ConfigSetting.

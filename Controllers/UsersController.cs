@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
-using CategoriseApi.Dtos;
-using CategoriseApi.Helpers;
-using CategoriseApi.Models;
-using CategoriseApi.Services;
+using Categorise.Dtos;
+using Categorise.Helpers;
+using Categorise.Models;
+using Categorise.Services;
 
-namespace CategoriseApi.Controllers
+namespace Categorise.Controllers
 {
     /// <summary>
     /// This controller exposes management actions for the Users table.

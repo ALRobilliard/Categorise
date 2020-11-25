@@ -2,11 +2,11 @@ using System;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CategoriseApi.Models;
-using CategoriseApi.Services;
-using CategoriseApi.Extensions;
+using Categorise.Models;
+using Categorise.Services;
+using Categorise.Extensions;
 
-namespace CategoriseApi.Controllers
+namespace Categorise.Controllers
 {
     /// <summary>
     /// This controller exposes CRUD actions for the Transactions table.

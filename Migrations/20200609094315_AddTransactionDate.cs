@@ -2,7 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CategoriseApi.Migrations
+namespace Categorise.Migrations
 {
     public partial class AddTransactionDate : Migration
     {

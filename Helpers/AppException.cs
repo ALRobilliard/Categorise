@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace CategoriseApi.Helpers
+namespace Categorise.Helpers
 {
     /// <summary>
     /// Custom class for app exceptions.
