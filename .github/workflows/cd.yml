@@ -1,15 +1,15 @@
-name: Continuous Deployment
+name: CD
 on:
   push:
     branches:
       - master
 env:
-  NETCORE_VERSION: '3.1.300'
+  NETCORE_VERSION: '5.0.100'
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    name: Continuous Deployment
+    name: CD
     steps:
       - name: Checkout
         uses: actions/checkout@v2
