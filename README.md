@@ -1,7 +1,7 @@
 # Categorise
 
-![Continuous Integration](https://github.com/ALRobilliard/Categorise/workflows/Continuous%20Integration/badge.svg)
-![Continuous Deployment](https://github.com/ALRobilliard/Categorise/workflows/Continuous%20Deployment/badge.svg)
+![CI](https://github.com/ALRobilliard/Categorise/workflows/CI/badge.svg)
+![CD](https://github.com/ALRobilliard/Categorise/workflows/CD/badge.svg)
 
 This is a .NET 5 project providing a REST API (and soon a Blazor front-end) which interfaces with a PostgreSQL database that contains monetary transaction data.
 
