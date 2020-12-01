@@ -2,48 +2,71 @@
 
 @using Categorise.Data
 @using Categorise.Services
+@using System.Security.Claims;
 @inject IAccountService AccountService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<h1>Accounts</h1>
+<AuthorizeView>
+    <Authorized>
+        <h1>Accounts</h1>
 
-<p>This component demonstrates fetching data from a service.</p>
+        <p>This component demonstrates fetching data from a service.</p>
 
-@if (accounts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Balance</th>
-                <th>Type</th>
-                <th>Credit Limit</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var account in accounts)
+        @if (accounts == null)
             {
-                var accountType = account.AccountType == 0 ? "Credit" : "Debit";
-                var creditLimit = account.CreditLimit == null ? "N/A" : string.Format("{0:C}", account.CreditLimit);
-                <tr>
-                    <td>@account.AccountName</td>
-                    <td>@account.Balance</td>
-                    <td>@accountType</td>
-                    <td>@creditLimit</td>
-                </tr>
+                <p><em>Loading...</em></p>
             }
-        </tbody>
-    </table>
-}
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Balance</th>
+                            <th>Type</th>
+                            <th>Credit Limit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var account in accounts)
+                        {
+                            var accountType = account.AccountType == 0 ? "Credit" : "Debit";
+                            var creditLimit = account.CreditLimit == null ? "N/A" : string.Format("{0:C}", account.CreditLimit);
+                            <tr>
+                                <td>@account.AccountName</td>
+                                <td>@account.Balance</td>
+                                <td>@accountType</td>
+                                <td>@creditLimit</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <a href="Identity/Account/Register">Register</a>
+            <a href="Identity/Account/Login">Log in</a>
+        </NotAuthorized>
+    </AuthorizeView>
 
-@code {
+    @code {
     private IEnumerable<Account> accounts;
+    private string _userId;
 
     protected override async Task OnInitializedAsync()
     {
-        accounts = AccountService.GetAccounts("1234");
+        await GetClaimsPrincipalData();
+        accounts = AccountService.GetAccounts(_userId);
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; ;
+        }
     }
 }
