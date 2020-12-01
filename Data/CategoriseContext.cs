@@ -1,13 +1,14 @@
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Categorise.Models
+namespace Categorise.Data
 {
     /// <summary>
     /// DbContext for Categorise.
     /// </summary>
-    public class CategoriseContext : DbContext
+    public class CategoriseContext : IdentityDbContext
     {
         private readonly string _connectionString;
 
@@ -67,11 +68,6 @@ namespace Categorise.Models
         /// Transaction tag DbSet.
         /// </summary>
         public virtual DbSet<TransactionTag> TransactionTags { get; set; }
-
-        /// <summary>
-        /// User DbSet.
-        /// </summary>
-        public virtual DbSet<User> Users { get; set; }
 
         /// <summary>
         /// OnConfiguring method.

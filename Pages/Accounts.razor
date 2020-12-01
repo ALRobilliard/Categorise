@@ -1,6 +1,6 @@
 ﻿@page "/accounts"
 
-@using Categorise.Models
+@using Categorise.Data
 @using Categorise.Services
 @inject IAccountService AccountService
 
@@ -44,6 +44,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        accounts = AccountService.GetAccounts(Guid.NewGuid());
+        accounts = AccountService.GetAccounts("1234");
     }
 }

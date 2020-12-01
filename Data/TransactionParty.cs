@@ -1,29 +1,24 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
-namespace Categorise.Models
+namespace Categorise.Data
 {
     /// <summary>
-    /// Transaction note entity model.
+    /// Transaction party entity model.
     /// </summary>
-    public class TransactionNote : BaseEntity
+    public class TransactionParty : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the transaction note subject.
+        /// Gets or sets the transaction party name.
         /// </summary>
         [Required]
         [MaxLength(50)]
-        public string TransactionNoteSubject { get; set; }
+        public string TransactionPartyName { get; set; }
 
         /// <summary>
-        /// Gets or sets the transaction note body.
-        /// </summary>
-        [MaxLength(500)]
-        public string TransactionNoteBody { get; set; }
-
-        /// <summary>
-        /// Unique identifier of the associated transaction.
+        /// Unqiue identifier of the associated transaction.
         /// </summary>
         public Guid TransactionId { get; set; }
 
@@ -36,12 +31,12 @@ namespace Categorise.Models
         /// <summary>
         /// Unique identifier of the owning user.
         /// </summary>
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         /// <summary>
         /// Owning user.
         /// </summary>
         [ForeignKey("UserForeignKey")]
-        public User User { get; set; }
+        public IdentityUser User { get; set; }
     }
 }

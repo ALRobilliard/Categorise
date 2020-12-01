@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Categorise.Models
+namespace Categorise.Data
 {
     /// <summary>
     /// Config Setting entity model.

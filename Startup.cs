@@ -1,20 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using AutoMapper;
-using Npgsql;
-using Categorise.Models;
+using Categorise.Areas.Identity;
+using Categorise.Data;
 using Categorise.Services;
+using Npgsql;
 
 namespace Categorise
 {
@@ -31,25 +33,21 @@ namespace Categorise
         public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
-            _currentEnvironment = environment;
+            CurrentEnvironment = environment;
         }
 
         /// <summary>
         /// Startup configuration.
         /// </summary>
         public IConfiguration Configuration { get; }
-        private readonly IWebHostEnvironment _currentEnvironment;
+        private IWebHostEnvironment CurrentEnvironment;
 
         /// <summary>
         /// Called by the runtime. Use this method to add services to the container.
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddRazorPages();
-            services.AddServerSideBlazor();
-
-            if (_currentEnvironment.IsDevelopment())
+            if (CurrentEnvironment.IsDevelopment())
             {
                 var builder = new NpgsqlConnectionStringBuilder(
                 Configuration.GetConnectionString("CategoriseContext"));
@@ -57,83 +55,23 @@ namespace Categorise
                 builder.Password = Configuration["DB_PASSWORD"];
                 _connectionString = builder.ConnectionString;
             }
-            else if (_currentEnvironment.IsProduction())
+            else if (CurrentEnvironment.IsProduction())
             {
                 _connectionString = ParseConnectionUri(Configuration["DATABASE_URL"]);
             }
 
             services.AddDbContext<CategoriseContext>(options =>
                 options.UseNpgsql(_connectionString));
-            services.AddAutoMapper(typeof(Startup));
-
-            // Configure JWT authentication.
-            var key = Encoding.ASCII.GetBytes(Configuration["APP_SECRET"]);
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.Events = new JwtBearerEvents
-                {
-                    OnTokenValidated = context =>
-                    {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var email = context.Principal.Identity.Name;
-                        var user = userService.GetUserByEmail(email);
-                        if (user == null)
-                        {
-                            // Return unauthorized if user no longer exists.
-                            context.Fail("Unauthorized");
-                        }
-                        return Task.CompletedTask;
-                    }
-                };
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddSwaggerGen(options =>
-            {
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            },
-                            Scheme = "oauth2",
-                            Name = "Bearer",
-                            In = ParameterLocation.Header
-                        },
-                        new List<string>()
-                    }
-                });
-            });
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<CategoriseContext>();
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
+            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            services.AddDatabaseDeveloperPageExceptionFilter();
+            //services.AddScoped<AccountService>();
         }
 
-        /// <summary>
-        /// Called by the runtime. Use this method to configure the HTTP request pipeline.
-        /// </summary>
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, CategoriseContext context, IWebHostEnvironment env)
         {
             CreateDefaultConfig(context);
@@ -141,6 +79,7 @@ namespace Categorise
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {
@@ -149,26 +88,19 @@ namespace Categorise
                 app.UseHsts();
             }
 
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
-            });
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Categorise API V1");
             });
         }
 

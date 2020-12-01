@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
-namespace Categorise.Models
+namespace Categorise.Data
 {
     /// <summary>
     /// Category entity model.
@@ -20,13 +21,13 @@ namespace Categorise.Models
         /// <summary>
         /// Unqiue identifier for the owning user.
         /// </summary>
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         /// <summary>
         /// Owning user.
         /// </summary>
         [ForeignKey("UserForeignKey")]
-        public User User { get; set; }
+        public IdentityUser User { get; set; }
 
         /// <summary>
         /// List of transactions associated with this category.
