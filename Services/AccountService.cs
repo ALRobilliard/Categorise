@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Categorise.Data;
+using Categorise.Dtos;
 
 namespace Categorise.Services
 {
@@ -28,12 +29,12 @@ namespace Categorise.Services
         /// <summary>
         /// Creates an account for the specified user.
         /// </summary>
-        Account CreateAccount(Account account, string userId);
+        Account CreateAccount(AccountDto accountDto, string userId);
 
         /// <summary>
         /// Updates an account for the specified user.
         /// </summary>
-        void UpdateAccount(Account account, string userId);
+        void UpdateAccount(AccountDto account, string userId);
 
         /// <summary>
         /// Deletes the specified account for the specified user.
@@ -86,9 +87,16 @@ namespace Categorise.Services
         /// <summary>
         /// Creates an account for the specified user.
         /// </summary>
-        public Account CreateAccount(Account account, string userId)
+        public Account CreateAccount(AccountDto accountDto, string userId)
         {
-            account.UserId = userId;
+            Account account = new Account
+            {
+                AccountName = accountDto.AccountName,
+                AccountType = accountDto.AccountType,
+                Balance = accountDto.Balance,
+                CreditLimit = accountDto.CreditLimit,
+                UserId = userId
+            };
             _context.Accounts.Add(account);
             _context.SaveChanges();
 
@@ -98,16 +106,16 @@ namespace Categorise.Services
         /// <summary>
         /// Updates an account for the specified user.
         /// </summary>
-        public void UpdateAccount(Account accountInput, string userId)
+        public void UpdateAccount(AccountDto accountDto, string userId)
         {
-            Account account = _context.Accounts.Find(accountInput.Id);
+            Account account = _context.Accounts.Find(accountDto.Id);
 
             if (account != null)
             {
-                account.AccountName = accountInput.AccountName;
-                account.Balance = accountInput.Balance;
-                account.AccountType = accountInput.AccountType;
-                account.CreditLimit = accountInput.CreditLimit;
+                account.AccountName = accountDto.AccountName;
+                account.AccountType = accountDto.AccountType;
+                account.Balance = accountDto.Balance;
+                account.CreditLimit = accountDto.CreditLimit;
 
                 _context.Accounts.Update(account);
                 _context.SaveChanges();

@@ -1,0 +1,69 @@
+@page "/accounts/add"
+@using Categorise.Dtos
+@using Categorise.Services
+@using System.Security.Claims
+@inject IAccountService AccountService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<h1>Accounts</h1>
+
+<h2>Create New Account</h2>
+
+<EditForm Model="@account" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        <label>
+            Name:
+            <InputText @bind-Value="account.AccountName" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Balance (optional):
+            <InputNumber @bind-Value="account.Balance" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Type:
+            <InputSelect @bind-Value="account.AccountType">
+                <option value="0">Credit</option>
+                <option value="1">Debit</option>
+            </InputSelect>
+        </label>
+    </p>
+    <p>
+        <label>
+            Credit Limit (optional):
+            <InputNumber @bind-Value="account.CreditLimit" />
+        </label>
+    </p>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    private AccountDto account = new AccountDto();
+    private string _userId;
+
+    private async void HandleValidSubmit()
+    {
+        await GetClaimsPrincipalData();
+        AccountService.CreateAccount(account, _userId);
+        NavigationManager.NavigateTo("/accounts");
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; ;
+        }
+    }
+}
