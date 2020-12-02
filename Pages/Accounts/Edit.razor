@@ -1,0 +1,40 @@
+@page "/account/edit/{accountId}"
+@using Categorise.Data
+@inject NavigationManager uriHelper
+@using Categorise.Services
+@using System.Security.Claims
+@inject IAccountService AccountService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Edit Account</h3>
+
+<Form ButtonText="Update" account="account" OnValidSubmit="@EditAccount" />
+
+@code {
+    [Parameter] public string accountId { get; set; }
+    Account account = new Account();
+    string _userId;
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await GetClaimsPrincipalData();
+        account = AccountService.GetAccountById(new Guid(accountId), _userId);
+    }
+
+    void EditAccount()
+    {
+        AccountService.UpdateAccount(account, _userId);
+        uriHelper.NavigateTo("account");
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
+}

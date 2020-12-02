@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Categorise.Models;
-using Categorise.Dtos;
+using Categorise.Data;
 
 namespace Categorise.Services
 {
@@ -14,34 +13,34 @@ namespace Categorise.Services
         /// <summary>
         /// Retrieve all accounts for the specified user.
         /// </summary>
-        IEnumerable<Account> GetAccounts(Guid userId);
+        IEnumerable<Account> GetAccounts(string userId);
 
         /// <summary>
         /// Retrieve a single account for the specified user by account unique identifier.
         /// </summary>
-        Account GetAccountById(Guid id, Guid userId);
+        Account GetAccountById(Guid id, string userId);
 
         /// <summary>
         /// Retrieve a single account for the specified user by account name.
         /// </summary>
-        Account GetAccountByName(string name, Guid userId);
+        Account GetAccountByName(string name, string userId);
 
         /// <summary>
         /// Creates an account for the specified user.
         /// </summary>
-        Account CreateAccount(AccountDto accountDto, Guid userId);
+        Account CreateAccount(Account accountDto, string userId);
 
         /// <summary>
         /// Updates an account for the specified user.
         /// </summary>
-        void UpdateAccount(AccountDto accountDto, Guid userId);
+        void UpdateAccount(Account account, string userId);
 
         /// <summary>
         /// Deletes the specified account for the specified user.
         /// </summary>
         /// <param name="accountId"></param>
         /// <param name="userId"></param>
-        void DeleteAccount(Guid accountId, Guid userId);
+        void DeleteAccount(Guid accountId, string userId);
     }
 
     /// <summary>
@@ -62,7 +61,7 @@ namespace Categorise.Services
         /// <summary>
         /// Retrieve all accounts for the specified user.
         /// </summary>
-        public IEnumerable<Account> GetAccounts(Guid userId)
+        public IEnumerable<Account> GetAccounts(string userId)
         {
             return _context.Accounts.Where(a => a.UserId == userId);
         }
@@ -70,7 +69,7 @@ namespace Categorise.Services
         /// <summary>
         /// Retrieve a single account for the specified user by account unique identifier.
         /// </summary>
-        public Account GetAccountById(Guid id, Guid userId)
+        public Account GetAccountById(Guid id, string userId)
         {
             return _context.Accounts.Where(a => a.Id == id && a.UserId == userId).FirstOrDefault();
         }
@@ -78,7 +77,7 @@ namespace Categorise.Services
         /// <summary>
         /// Retrieve a single account for the specified user by account name.
         /// </summary>
-        public Account GetAccountByName(string name, Guid userId)
+        public Account GetAccountByName(string name, string userId)
         {
             return _context.Accounts
               .Where(a => a.AccountName == name && a.UserId == userId).FirstOrDefault();
@@ -87,7 +86,7 @@ namespace Categorise.Services
         /// <summary>
         /// Creates an account for the specified user.
         /// </summary>
-        public Account CreateAccount(AccountDto accountDto, Guid userId)
+        public Account CreateAccount(Account accountDto, string userId)
         {
             Account account = new Account
             {
@@ -97,7 +96,6 @@ namespace Categorise.Services
                 CreditLimit = accountDto.CreditLimit,
                 UserId = userId
             };
-
             _context.Accounts.Add(account);
             _context.SaveChanges();
 
@@ -107,15 +105,15 @@ namespace Categorise.Services
         /// <summary>
         /// Updates an account for the specified user.
         /// </summary>
-        public void UpdateAccount(AccountDto accountDto, Guid userId)
+        public void UpdateAccount(Account accountDto, string userId)
         {
             Account account = _context.Accounts.Find(accountDto.Id);
 
             if (account != null)
             {
                 account.AccountName = accountDto.AccountName;
-                account.Balance = accountDto.Balance;
                 account.AccountType = accountDto.AccountType;
+                account.Balance = accountDto.Balance;
                 account.CreditLimit = accountDto.CreditLimit;
 
                 _context.Accounts.Update(account);
@@ -128,7 +126,7 @@ namespace Categorise.Services
         /// </summary>
         /// <param name="accountId"></param>
         /// <param name="userId"></param>
-        public void DeleteAccount(Guid accountId, Guid userId)
+        public void DeleteAccount(Guid accountId, string userId)
         {
             Account account = _context.Accounts.Find(accountId);
 
