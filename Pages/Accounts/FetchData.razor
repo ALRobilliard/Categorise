@@ -1,0 +1,93 @@
+﻿@page "/account"
+
+@using Categorise.Data
+@using Categorise.Services
+@using System.Security.Claims;
+@inject IAccountService AccountService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime js
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Accounts</h1>
+
+        <div class="form-group">
+            <a class="btn btn-success" href="account/create"><i class="oi oi-plus"></i> Create New</a>
+        </div>
+
+        @if (accounts == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Balance</th>
+                            <th>Type</th>
+                            <th>Credit Limit</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var account in accounts)
+                        {
+                            var accountType = account.AccountType == 0 ? "Credit" : "Debit";
+                            var creditLimit = account.CreditLimit == null ? "N/A" : string.Format("{0:C}", account.CreditLimit);
+                            <tr>
+                                <td>@account.AccountName</td>
+                                <td>@account.Balance</td>
+                                <td>@accountType</td>
+                                <td>@creditLimit</td>
+                                <td>
+                                    <a class="btn btn-success" href="account/edit/@account.Id">Edit</a>
+                                    <button class="btn btn-danger" @onclick="@(() => Delete(account.Id))">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <a href="Identity/Account/Register">Register</a>
+            <a href="Identity/Account/Login">Log in</a>
+        </NotAuthorized>
+    </AuthorizeView>
+
+    @code {
+    private IEnumerable<Account> accounts;
+    private string _userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetClaimsPrincipalData();
+        accounts = AccountService.GetAccounts(_userId);
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; ;
+        }
+    }
+
+    async Task Delete(Guid accountId)
+    {
+        Account account = AccountService.GetAccountById(accountId, _userId);
+
+        if (account != null)
+        {
+            if (await js.InvokeAsync<bool>("confirm", $"Are you sure you want to delete account: {account.AccountName}?"))
+            {
+                AccountService.DeleteAccount(accountId, _userId);
+            }
+        }
+    }
+}

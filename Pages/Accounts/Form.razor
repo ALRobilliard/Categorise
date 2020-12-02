@@ -1,0 +1,50 @@
+@using Categorise.Data;
+
+<EditForm Model="@account" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Name:</label>
+        <div>
+            <InputText @bind-Value="@account.AccountName" />
+            <ValidationMessage For="@(() => account.AccountName)" />
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Balance:</label>
+            <div>
+                <InputNumber @bind-Value="@account.Balance" />
+                <ValidationMessage For="@(() => account.Balance)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>AccountType:</label>
+            <div>
+                <InputSelect @bind-Value="account.AccountType">
+                <option value="0">Credit</option>
+                <option value="1">Debit</option>
+            </InputSelect>
+                <ValidationMessage For="@(() => account.AccountType)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Credit Limit (optional):</label>
+            <div>
+                <InputNumber @bind-Value="account.CreditLimit" />
+                <ValidationMessage For="@(() => account.CreditLimit)" />
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">
+        @ButtonText
+    </button>
+</EditForm>
+@code {
+    [Parameter] public Account account { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}
