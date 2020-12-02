@@ -5,12 +5,15 @@
 @using System.Security.Claims;
 @inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime js
 
 <AuthorizeView>
     <Authorized>
         <h1>Accounts</h1>
 
-        <p>This component demonstrates fetching data from a service.</p>
+        <div class="form-group">
+            <a class="btn btn-success" href="account/create"><i class="oi oi-plus"></i> Create New</a>
+        </div>
 
         @if (accounts == null)
             {
@@ -25,6 +28,7 @@
                             <th>Balance</th>
                             <th>Type</th>
                             <th>Credit Limit</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,6 +41,10 @@
                                 <td>@account.Balance</td>
                                 <td>@accountType</td>
                                 <td>@creditLimit</td>
+                                <td>
+                                    <a class="btn btn-success" href="account/edit/@account.Id">Edit</a>
+                                    <button class="btn btn-danger" @onclick="@(() => Delete(account.Id))">Delete</button>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -67,6 +75,19 @@
         if (user.Identity.IsAuthenticated)
         {
             _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; ;
+        }
+    }
+
+    async Task Delete(Guid accountId)
+    {
+        Account account = AccountService.GetAccountById(accountId, _userId);
+
+        if (account != null)
+        {
+            if (await js.InvokeAsync<bool>("confirm", $"Are you sure you want to delete account: {account.AccountName}?"))
+            {
+                AccountService.DeleteAccount(accountId, _userId);
+            }
         }
     }
 }

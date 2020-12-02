@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Categorise.Data;
-using Categorise.Dtos;
 
 namespace Categorise.Services
 {
@@ -29,12 +28,12 @@ namespace Categorise.Services
         /// <summary>
         /// Creates an account for the specified user.
         /// </summary>
-        Account CreateAccount(AccountDto accountDto, string userId);
+        Account CreateAccount(Account accountDto, string userId);
 
         /// <summary>
         /// Updates an account for the specified user.
         /// </summary>
-        void UpdateAccount(AccountDto account, string userId);
+        void UpdateAccount(Account account, string userId);
 
         /// <summary>
         /// Deletes the specified account for the specified user.
@@ -87,7 +86,7 @@ namespace Categorise.Services
         /// <summary>
         /// Creates an account for the specified user.
         /// </summary>
-        public Account CreateAccount(AccountDto accountDto, string userId)
+        public Account CreateAccount(Account accountDto, string userId)
         {
             Account account = new Account
             {
@@ -106,7 +105,7 @@ namespace Categorise.Services
         /// <summary>
         /// Updates an account for the specified user.
         /// </summary>
-        public void UpdateAccount(AccountDto accountDto, string userId)
+        public void UpdateAccount(Account accountDto, string userId)
         {
             Account account = _context.Accounts.Find(accountDto.Id);
 
