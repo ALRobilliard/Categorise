@@ -58,6 +58,18 @@ namespace Categorise.Data
         public Category Category { get; set; }
 
         /// <summary>
+        /// Unique identifier for the associated Vendor.
+        /// </summary>
+        /// <value></value>
+        public Guid VendorId { get; set; }
+
+        /// <summary>
+        /// Associated vendor.
+        /// </summary>
+        [ForeignKey("VendorForeignKey")]
+        public Vendor Vendor { get; set; }
+
+        /// <summary>
         /// Unqique identifier for the owning user.
         /// </summary>
         public string UserId { get; set; }
@@ -72,11 +84,6 @@ namespace Categorise.Data
         /// List of transaction notes associated with this transaction.
         /// </summary>
         public List<TransactionNote> TransactionNotes { get; set; }
-
-        /// <summary>
-        /// List of transaction parties associated with this transaction.
-        /// </summary>
-        public List<Vendor> Vendors { get; set; }
 
         /// <summary>
         /// List of transaction tags associated with this transaction.

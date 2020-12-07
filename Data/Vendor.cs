@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
@@ -23,12 +24,6 @@ namespace Categorise.Data
         public Guid VendorId { get; set; }
 
         /// <summary>
-        /// Associated transaction.
-        /// </summary>
-        [ForeignKey("TransactionForeignKey")]
-        public Transaction Transaction { get; set; }
-
-        /// <summary>
         /// Unique identifier of the owning user.
         /// </summary>
         public string UserId { get; set; }
@@ -38,5 +33,10 @@ namespace Categorise.Data
         /// </summary>
         [ForeignKey("UserForeignKey")]
         public IdentityUser User { get; set; }
+
+        /// <summary>
+        /// List of transactions associated with this vendor.
+        /// </summary>
+        public List<Transaction> Transactions { get; set; }
     }
 }
