@@ -76,7 +76,7 @@ namespace Categorise.Data
         /// <summary>
         /// List of transaction parties associated with this transaction.
         /// </summary>
-        public List<TransactionParty> TransactionParties { get; set; }
+        public List<Vendor> Vendors { get; set; }
 
         /// <summary>
         /// List of transaction tags associated with this transaction.

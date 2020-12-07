@@ -6,21 +6,21 @@ using Microsoft.AspNetCore.Identity;
 namespace Categorise.Data
 {
     /// <summary>
-    /// Transaction party entity model.
+    /// Vendor entity model.
     /// </summary>
-    public class TransactionParty : BaseEntity
+    public class Vendor : BaseEntity
     {
         /// <summary>
-        /// Gets or sets the transaction party name.
+        /// Gets or sets the vendor name.
         /// </summary>
         [Required]
         [MaxLength(50)]
-        public string TransactionPartyName { get; set; }
+        public string VendorName { get; set; }
 
         /// <summary>
         /// Unqiue identifier of the associated transaction.
         /// </summary>
-        public Guid TransactionId { get; set; }
+        public Guid VendorId { get; set; }
 
         /// <summary>
         /// Associated transaction.
