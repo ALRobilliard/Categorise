@@ -1,0 +1,85 @@
+@page "/vendor"
+
+@using Categorise.Data
+@using Categorise.Services
+@using System.Security.Claims;
+@inject IVendorService VendorService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime js
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Vendors</h1>
+
+        <div class="form-group">
+            <a class="btn btn-success" href="vendor/create"><i class="oi oi-plus"></i> Create New</a>
+        </div>
+
+        @if (vendors == null)
+            {
+                <p><em>Loading...</em></p>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var vendor in vendors)
+                        {
+                            <tr>
+                                <td>@vendor.VendorName</td>
+                                <td>
+                                    <a class="btn btn-success" href="vendor/edit/@vendor.Id">Edit</a>
+                                    <button class="btn btn-danger" @onclick="@(() => Delete(vendor.Id))">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <a href="Identity/Account/Register">Register</a>
+            <a href="Identity/Account/Login">Log in</a>
+        </NotAuthorized>
+    </AuthorizeView>
+
+    @code {
+    private IEnumerable<Vendor> vendors;
+    private string _userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetClaimsPrincipalData();
+        vendors = VendorService.GetVendors(_userId);
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; ;
+        }
+    }
+
+    async Task Delete(Guid vendorId)
+    {
+        Vendor vendor = VendorService.GetVendorById(vendorId, _userId);
+
+        if (vendor != null)
+        {
+            if (await js.InvokeAsync<bool>("confirm", $"Are you sure you want to delete vendor: {vendor.VendorName}?"))
+            {
+                VendorService.DeleteVendor(vendorId, _userId);
+            }
+        }
+    }
+}

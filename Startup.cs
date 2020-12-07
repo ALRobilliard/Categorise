@@ -66,6 +66,7 @@ namespace Categorise
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IVendorService, VendorService>();
             services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
