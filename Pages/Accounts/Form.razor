@@ -23,9 +23,9 @@
             <label>AccountType:</label>
             <div>
                 <InputSelect @bind-Value="account.AccountType">
-                <option value="0">Credit</option>
-                <option value="1">Debit</option>
-            </InputSelect>
+                    <option value="0">Credit</option>
+                    <option value="1">Debit</option>
+                </InputSelect>
                 <ValidationMessage For="@(() => account.AccountType)" />
             </div>
         </div>

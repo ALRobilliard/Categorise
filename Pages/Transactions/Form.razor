@@ -1,0 +1,50 @@
+@using Categorise.Data;
+
+<EditForm Model="@transaction" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Transaction Type:</label>
+        <div>
+            <InputSelect @bind-Value="transaction.TransactionType">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => transaction.TransactionType)" />
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Amount:</label>
+            <div>
+                <InputNumber @bind-Value="@transaction.Amount" />
+                <ValidationMessage For="@(() => transaction.Amount)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Is Shared:</label>
+            <div>
+                <InputCheckbox @bind-Value="transaction.IsShared" />
+                <ValidationMessage For="@(() => transaction.IsShared)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Transaction Date</label>
+            <div>
+                <InputDate @bind-Value="transaction.TransactionDate" />
+                <ValidationMessage For="@(() => transaction.TransactionDate)" />
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">
+        @ButtonText
+    </button>
+</EditForm>
+@code {
+    [Parameter] public Transaction transaction { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}

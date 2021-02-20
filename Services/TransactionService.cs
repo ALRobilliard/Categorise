@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Categorise.Data;
+using System.Linq;
 
 namespace Categorise.Services
 {
@@ -12,7 +13,7 @@ namespace Categorise.Services
         /// <summary>
         /// Retrieve all transactions for the specified user.
         /// </summary>
-        IEnumerable<Transaction> GetTransactions();
+        IEnumerable<Transaction> GetTransactions(string userId);
 
         /// <summary>
         /// Retrieve a single transaction for the specified user by transaction unique identifier.
@@ -22,7 +23,7 @@ namespace Categorise.Services
         /// <summary>
         /// Creates a single transaction for the specified user.
         /// </summary>
-        Transaction CreateTransaction(Transaction transaction);
+        Transaction CreateTransaction(Transaction transaction, string userId);
 
         /// <summary>
         /// Updates a transaction owned by the specified user.
@@ -53,9 +54,9 @@ namespace Categorise.Services
         /// <summary>
         /// Retrieve all transactions for the specified user.
         /// </summary>
-        public IEnumerable<Transaction> GetTransactions()
+        public IEnumerable<Transaction> GetTransactions(string userId)
         {
-            return _context.Transactions;
+            return _context.Transactions.Where(t => t.UserId == userId).ToList();
         }
 
         /// <summary>
@@ -69,8 +70,9 @@ namespace Categorise.Services
         /// <summary>
         /// Creates a single transaction for the specified user.
         /// </summary>
-        public Transaction CreateTransaction(Transaction transaction)
+        public Transaction CreateTransaction(Transaction transaction, string userId)
         {
+            transaction.UserId = userId;
             _context.Transactions.Add(transaction);
             _context.SaveChanges();
 

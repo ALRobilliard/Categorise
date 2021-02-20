@@ -1,0 +1,93 @@
+@page "/transaction"
+
+@using Categorise.Data
+@using Categorise.Services
+@using System.Security.Claims;
+@inject ITransactionService TransactionService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime js
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Transactions</h1>
+
+        <div class="form-group">
+            <a class="btn btn-success" href="transaction/create"><i class="oi oi-plus"></i> Create New</a>
+        </div>
+
+        @if (transactions == null)
+                {
+        <p><em>Loading...</em></p>
+        }
+                else
+                {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Transaction Type</th>
+                    <th>Account</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Is Shared?</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var transaction in transactions)
+                {
+                    <tr>
+                        <td>@transaction.TransactionType</td>
+                        <td>-</td>
+                        <td>@transaction.Amount</td>
+                        <td>-</td>
+                        <td>@transaction.IsShared</td>
+                        <td>
+                            <a class="btn btn-success" href="transaction/edit/@transaction.Id">Edit</a>
+                            <button class="btn btn-danger" @onclick="@(() => Delete(transaction.Id))">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <a href="Identity/Account/Register">Register</a>
+        <a href="Identity/Account/Login">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private IEnumerable<Transaction> transactions;
+    private string _userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetClaimsPrincipalData();
+        transactions = TransactionService.GetTransactions(_userId);
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; ;
+        }
+    }
+
+    async Task Delete(Guid transactionId)
+    {
+        Transaction transaction = TransactionService.GetTransaction(transactionId);
+
+        if (transaction != null)
+        {
+            if (await js.InvokeAsync<bool>("confirm", "Are you sure you want to delete this transaction?"))
+            {
+                TransactionService.DeleteTransaction(transactionId);
+            }
+        }
+    }
+}

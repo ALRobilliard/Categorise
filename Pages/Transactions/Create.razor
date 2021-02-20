@@ -1,0 +1,34 @@
+@page "/transaction/create"
+@using Categorise.Data
+@using Categorise.Services
+@using System.Security.Claims
+@inject ITransactionService TransactionService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<h3>Create Transaction</h3>
+
+<Form ButtonText="Create Transaction" transaction="@transaction" OnValidSubmit="@HandleValidSubmit" />
+
+@code {
+    string _userId;
+    Transaction transaction = new Transaction();
+
+    private async void HandleValidSubmit()
+    {
+        await GetClaimsPrincipalData();
+        TransactionService.CreateTransaction(transaction, _userId);
+        NavigationManager.NavigateTo("/transaction");
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
+}
