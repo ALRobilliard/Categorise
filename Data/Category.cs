@@ -18,6 +18,8 @@ namespace Categorise.Data
         [MaxLength(25)]
         public string CategoryName { get; set; }
 
+        public bool IsGlobal { get; set; }
+
         /// <summary>
         /// Unqiue identifier for the owning user.
         /// </summary>
@@ -33,5 +35,7 @@ namespace Categorise.Data
         /// List of transactions associated with this category.
         /// </summary>
         public List<Transaction> Transactions { get; set; }
+
+        public List<Vendor> Vendors { get; set; }
     }
 }

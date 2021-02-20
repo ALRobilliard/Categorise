@@ -35,8 +35,22 @@ namespace Categorise.Data
         public IdentityUser User { get; set; }
 
         /// <summary>
+        /// Unique identifier of the default category.
+        /// </summary>
+        /// <value></value>
+        public Guid? CategoryId { get; set; }
+
+        /// <summary>
+        /// Default category.
+        /// </summary>
+        /// <value></value>
+        [ForeignKey("CategoryForeignKey")]
+        public Category DefaultCategory { get; set; }
+
+        /// <summary>
         /// List of transactions associated with this vendor.
         /// </summary>
-        public List<Transaction> Transactions { get; set; }
+        public List<Transaction> Transactions
+        { get; set; }
     }
 }

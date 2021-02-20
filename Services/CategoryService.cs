@@ -57,11 +57,11 @@ namespace Categorise.Services
         }
 
         /// <summary>
-        /// Retrieve all categories for the specified user.
+        /// Retrieve all categories for the specified user, and global categories.
         /// </summary>
         public IEnumerable<Category> GetCategories(string userId)
         {
-            return _context.Categories.Where(c => c.UserId == userId).ToList();
+            return _context.Categories.Where(c => c.UserId == userId || c.IsGlobal).ToList();
         }
 
         /// <summary>
@@ -131,7 +131,8 @@ namespace Categorise.Services
             }
 
             List<Category> categories = _context.Categories
-              .Where(c => c.CategoryName.StartsWith(categoryName) && c.UserId == userId).ToList();
+              .Where(c => c.CategoryName.StartsWith(categoryName) && c.UserId == userId ||
+                c.CategoryName.StartsWith(categoryName) && c.IsGlobal).ToList();
             return categories;
         }
     }
