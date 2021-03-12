@@ -31,7 +31,7 @@ namespace Categorise.Data
         /// <summary>
         /// Owning user.
         /// </summary>
-        [ForeignKey("UserForeignKey")]
+        [ForeignKey("UserId")]
         public IdentityUser User { get; set; }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Categorise.Data
         /// Default category.
         /// </summary>
         /// <value></value>
-        [ForeignKey("CategoryForeignKey")]
+        [ForeignKey("CategoryId")]
         public Category DefaultCategory { get; set; }
 
         /// <summary>
