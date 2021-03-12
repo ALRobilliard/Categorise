@@ -41,6 +41,14 @@ namespace Categorise.Services
         /// <param name="accountId"></param>
         /// <param name="userId"></param>
         void DeleteAccount(Guid accountId, string userId);
+
+        /// <summary>
+        /// Search for the an account by account name.
+        /// </summary>
+        /// <param name="accountName"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        IEnumerable<Account> SearchAccounts(string accountName, string userId);
     }
 
     /// <summary>
@@ -135,6 +143,20 @@ namespace Categorise.Services
                 _context.Accounts.Remove(account);
                 _context.SaveChanges();
             }
+        }
+
+        public IEnumerable<Account> SearchAccounts(string accountName, string userId)
+        {
+            if (string.IsNullOrEmpty(accountName))
+            {
+                return new List<Account>();
+            }
+
+            return _context.Accounts
+              .Where(
+                  a => a.AccountName.ToLower().StartsWith(accountName.ToLower()) &&
+                  a.UserId == userId
+                ).ToList();
         }
     }
 }

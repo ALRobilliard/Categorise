@@ -39,6 +39,13 @@ namespace Categorise.Services
         /// Deletes the specified vendor for the specified user.
         /// </summary>
         void DeleteVendor(Guid vendorId, string userId);
+
+        /// <summary>
+        /// Search for vendors by vendor name.
+        /// </summary>
+        /// <param name="vendorName">Name of the target vendor.</param>
+        /// <param name="userId">Unique idendifier for the specified user.</param>
+        IEnumerable<Vendor> SearchVendors(string vendorName, string userId);
     }
 
     /// <summary>
@@ -137,6 +144,26 @@ namespace Categorise.Services
                 _context.Vendors.Remove(vendor);
                 _context.SaveChanges();
             }
+        }
+
+        /// <summary>
+        /// Search for the specified vendor by vendor name.
+        /// </summary>
+        /// <param name="vendorName"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public IEnumerable<Vendor> SearchVendors(string vendorName, string userId)
+        {
+            if (string.IsNullOrEmpty(vendorName))
+            {
+                return new List<Vendor>();
+            }
+
+            return _context.Vendors
+              .Where(
+                  a => a.VendorName.ToLower().StartsWith(vendorName.ToLower()) &&
+                  a.UserId == userId
+                ).ToList();
         }
     }
 }

@@ -24,9 +24,11 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Transaction Type</th>
+                    <th>Date</th>
+                    <th>Type</th>
                     <th>Account</th>
                     <th>Amount</th>
+                    <th>Vendor</th>
                     <th>Category</th>
                     <th>Is Shared?</th>
                     <th></th>
@@ -36,10 +38,12 @@
                 @foreach (var transaction in transactions)
                 {
                     <tr>
+                        <td>@(transaction.TransactionDate.ToString("dd/MM/yyyy"))</td>
                         <td>@transaction.TransactionType</td>
-                        <td>-</td>
+                        <td>@(transaction.Account?.AccountName ?? "-")</td>
                         <td>@transaction.Amount</td>
-                        <td>-</td>
+                        <td>@(transaction.Vendor?.VendorName ?? "-")</td>
+                        <td>@(transaction.Category?.CategoryName ?? "-")</td>
                         <td>@transaction.IsShared</td>
                         <td>
                             <a class="btn btn-success" href="transaction/edit/@transaction.Id">Edit</a>

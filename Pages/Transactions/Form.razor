@@ -1,9 +1,24 @@
 @using Categorise.Data;
+@using Categorise.Services
+@using System.Security.Claims;
+@inject IAccountService AccountService;
+@inject ICategoryService CategoryService;
+@inject IVendorService VendorService;
+@inject AuthenticationStateProvider AuthenticationStateProvider;
 
 <EditForm Model="@transaction" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
+    <div class="form-group ">
+        <div>
+            <label>Date</label>
+            <div>
+                <InputDate @bind-Value="transaction.TransactionDate" />
+                <ValidationMessage For="@(() => transaction.TransactionDate)" />
+            </div>
+        </div>
+    </div>
     <div class="form-group">
-        <label>Transaction Type:</label>
+        <label>Type:</label>
         <div>
             <InputSelect @bind-Value="transaction.TransactionType">
                 <option value="income">Income</option>
@@ -11,6 +26,17 @@
             </InputSelect>
             <ValidationMessage For="@(() => transaction.TransactionType)" />
         </div>
+    </div>
+    <div class="form-group ">
+        <label>Account:</label>
+        <BlazoredTypeahead SearchMethod="SearchAccounts" @bind-Value="@transaction.Account">
+            <SelectedTemplate Context="account">
+                @account.AccountName
+            </SelectedTemplate>
+            <ResultTemplate Context="account">
+                @account.AccountName
+            </ResultTemplate>
+        </BlazoredTypeahead>
     </div>
     <div class="form-group ">
         <div>
@@ -22,20 +48,33 @@
         </div>
     </div>
     <div class="form-group ">
+        <label>Vendor:</label>
+        <BlazoredTypeahead SearchMethod="SearchVendors" @bind-Value="@transaction.Vendor">
+            <SelectedTemplate Context="vendor">
+                @vendor.VendorName
+            </SelectedTemplate>
+            <ResultTemplate Context="vendor">
+                @vendor.VendorName
+            </ResultTemplate>
+        </BlazoredTypeahead>
+    </div>
+    <div class="form-group ">
+        <label>Category:</label>
+        <BlazoredTypeahead SearchMethod="SearchCategories" @bind-Value="@transaction.Category">
+            <SelectedTemplate Context="category">
+                @category.CategoryName
+            </SelectedTemplate>
+            <ResultTemplate Context="category">
+                @category.CategoryName
+            </ResultTemplate>
+        </BlazoredTypeahead>
+    </div>
+    <div class="form-group ">
         <div>
             <label>Is Shared:</label>
             <div>
                 <InputCheckbox @bind-Value="transaction.IsShared" />
                 <ValidationMessage For="@(() => transaction.IsShared)" />
-            </div>
-        </div>
-    </div>
-    <div class="form-group ">
-        <div>
-            <label>Transaction Date</label>
-            <div>
-                <InputDate @bind-Value="transaction.TransactionDate" />
-                <ValidationMessage For="@(() => transaction.TransactionDate)" />
             </div>
         </div>
     </div>
@@ -47,4 +86,36 @@
     [Parameter] public Transaction transaction { get; set; }
     [Parameter] public string ButtonText { get; set; } = "Save";
     [Parameter] public EventCallback OnValidSubmit { get; set; }
+    private string _userId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetClaimsPrincipalData();
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
+
+    private async Task<IEnumerable<Account>> SearchAccounts(string searchText)
+    {
+        return await Task.FromResult(AccountService.SearchAccounts(searchText, _userId));
+    }
+
+    private async Task<IEnumerable<Category>> SearchCategories(string searchText)
+    {
+        return await Task.FromResult(CategoryService.SearchCategories(searchText, _userId));
+    }
+
+    private async Task<IEnumerable<Vendor>> SearchVendors(string searchText)
+    {
+        return await Task.FromResult(VendorService.SearchVendors(searchText, _userId));
+    }
 }
