@@ -1,0 +1,40 @@
+@page "/vendor/edit/{vendorId}"
+@using Categorise.Data
+@inject NavigationManager uriHelper
+@using Categorise.Services
+@using System.Security.Claims
+@inject IVendorService VendorService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Edit Vendor</h3>
+
+<Form ButtonText="Update" vendor="vendor" OnValidSubmit="@EditVendor" />
+
+@code {
+    [Parameter] public string vendorId { get; set; }
+    Vendor vendor = new Vendor();
+    string _userId;
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await GetClaimsPrincipalData();
+        vendor = VendorService.GetVendorById(new Guid(vendorId), _userId);
+    }
+
+    void EditVendor()
+    {
+        VendorService.UpdateVendor(vendor, _userId);
+        uriHelper.NavigateTo("vendor");
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
+}

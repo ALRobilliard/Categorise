@@ -1,15 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +12,8 @@ using Categorise.Areas.Identity;
 using Categorise.Data;
 using Categorise.Services;
 using Npgsql;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Categorise
 {
@@ -71,6 +67,9 @@ namespace Categorise
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IVendorService, VendorService>();
             services.AddDatabaseDeveloperPageExceptionFilter();
         }
 
@@ -99,11 +98,18 @@ namespace Categorise
             app.UseAuthentication();
             app.UseAuthorization();
 
+            var blockRegistration = context.ConfigSettings.Where(c => c.Name == "AllowRegistrations").FirstOrDefault().Value == "false";
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+
+                if (blockRegistration)
+                {
+                    endpoints.MapGet("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true)));
+                    endpoints.MapPost("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true)));
+                }
             });
         }
 

@@ -1,0 +1,40 @@
+@page "/category/edit/{categoryId}"
+@using Categorise.Data
+@inject NavigationManager uriHelper
+@using Categorise.Services
+@using System.Security.Claims
+@inject ICategoryService CategoryService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Edit Category</h3>
+
+<Form ButtonText="Update" category="category" OnValidSubmit="@EditCategory" />
+
+@code {
+    [Parameter] public string categoryId { get; set; }
+    Category category = new Category();
+    string _userId;
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await GetClaimsPrincipalData();
+        category = CategoryService.GetCategory(new Guid(categoryId), _userId);
+    }
+
+    void EditCategory()
+    {
+        CategoryService.UpdateCategory(category, _userId);
+        uriHelper.NavigateTo("category");
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
+}

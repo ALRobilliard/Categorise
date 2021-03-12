@@ -6,7 +6,7 @@ namespace Categorise.Data
     /// <summary>
     /// Base entity model.
     /// </summary>
-    public class BaseEntity
+    public abstract class BaseEntity
     {
         /// <summary>
         /// Gets or sets the unique identifier.

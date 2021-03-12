@@ -16,48 +16,48 @@
         </div>
 
         @if (accounts == null)
-            {
-                <p><em>Loading...</em></p>
-            }
-            else
-            {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Balance</th>
-                            <th>Type</th>
-                            <th>Credit Limit</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var account in accounts)
-                        {
-                            var accountType = account.AccountType == 0 ? "Credit" : "Debit";
-                            var creditLimit = account.CreditLimit == null ? "N/A" : string.Format("{0:C}", account.CreditLimit);
-                            <tr>
-                                <td>@account.AccountName</td>
-                                <td>@account.Balance</td>
-                                <td>@accountType</td>
-                                <td>@creditLimit</td>
-                                <td>
-                                    <a class="btn btn-success" href="account/edit/@account.Id">Edit</a>
-                                    <button class="btn btn-danger" @onclick="@(() => Delete(account.Id))">Delete</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-        </Authorized>
-        <NotAuthorized>
-            <a href="Identity/Account/Register">Register</a>
-            <a href="Identity/Account/Login">Log in</a>
-        </NotAuthorized>
-    </AuthorizeView>
+                {
+        <p><em>Loading...</em></p>
+        }
+                else
+                {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Balance</th>
+                    <th>Type</th>
+                    <th>Credit Limit</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var account in accounts)
+                {
+                    var accountType = account.AccountType == 0 ? "Credit" : "Debit";
+                    var creditLimit = account.CreditLimit == null ? "N/A" : string.Format("{0:C}", account.CreditLimit);
+                    <tr>
+                        <td>@account.AccountName</td>
+                        <td>@account.Balance</td>
+                        <td>@accountType</td>
+                        <td>@creditLimit</td>
+                        <td>
+                            <a class="btn btn-success" href="account/edit/@account.Id">Edit</a>
+                            <button class="btn btn-danger" @onclick="@(() => Delete(account.Id))">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <a href="Identity/Account/Register">Register</a>
+        <a href="Identity/Account/Login">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>
 
-    @code {
+@code {
     private IEnumerable<Account> accounts;
     private string _userId;
 
