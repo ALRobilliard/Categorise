@@ -12,6 +12,8 @@ using Categorise.Areas.Identity;
 using Categorise.Data;
 using Categorise.Services;
 using Npgsql;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Categorise
 {
@@ -96,11 +98,18 @@ namespace Categorise
             app.UseAuthentication();
             app.UseAuthorization();
 
+            var blockRegistration = context.ConfigSettings.Where(c => c.Name == "AllowRegistrations").FirstOrDefault().Value == "false";
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+
+                if (blockRegistration)
+                {
+                    endpoints.MapGet("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true)));
+                    endpoints.MapPost("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true)));
+                }
             });
         }
 
