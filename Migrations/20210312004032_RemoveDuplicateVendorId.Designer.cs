@@ -3,15 +3,17 @@ using System;
 using Categorise.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Categorise.Migrations
 {
     [DbContext(typeof(CategoriseContext))]
-    partial class CategoriseContextModelSnapshot : ModelSnapshot
+    [Migration("20210312004032_RemoveDuplicateVendorId")]
+    partial class RemoveDuplicateVendorId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

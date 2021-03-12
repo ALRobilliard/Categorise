@@ -19,11 +19,6 @@ namespace Categorise.Data
         public string VendorName { get; set; }
 
         /// <summary>
-        /// Unqiue identifier of the associated transaction.
-        /// </summary>
-        public Guid VendorId { get; set; }
-
-        /// <summary>
         /// Unique identifier of the owning user.
         /// </summary>
         public string UserId { get; set; }
