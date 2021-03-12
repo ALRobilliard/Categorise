@@ -62,7 +62,7 @@ namespace Categorise.Data
         /// <summary>
         /// Transaction party DbSet.
         /// </summary>
-        public virtual DbSet<TransactionParty> TransactionParties { get; set; }
+        public virtual DbSet<Vendor> Vendors { get; set; }
 
         /// <summary>
         /// Transaction tag DbSet.

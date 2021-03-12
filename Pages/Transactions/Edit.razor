@@ -1,0 +1,40 @@
+@page "/transaction/edit/{transactionId}"
+@using Categorise.Data
+@inject NavigationManager uriHelper
+@using Categorise.Services
+@using System.Security.Claims
+@inject ITransactionService TransactionService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Edit Transaction</h3>
+
+<Form ButtonText="Update" transaction="transaction" OnValidSubmit="@EditTransaction" />
+
+@code {
+    [Parameter] public string transactionId { get; set; }
+    Transaction transaction = new Transaction();
+    string _userId;
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await GetClaimsPrincipalData();
+        transaction = TransactionService.GetTransaction(new Guid(transactionId));
+    }
+
+    void EditTransaction()
+    {
+        TransactionService.UpdateTransaction(transaction);
+        uriHelper.NavigateTo("transaction");
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
+}
