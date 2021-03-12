@@ -61,7 +61,19 @@ namespace Categorise.Services
         /// </summary>
         public IEnumerable<Vendor> GetVendors(string userId)
         {
-            return _context.Vendors.Where(v => v.UserId == userId);
+            return (from vendor in _context.Vendors
+                    join category in _context.Categories on vendor.CategoryId equals category.Id into vc
+                    from subCat in vc.DefaultIfEmpty()
+                    select new Vendor
+                    {
+                        Id = vendor.Id,
+                        VendorName = vendor.VendorName,
+                        DefaultCategory = subCat != null ? new Category
+                        {
+                            Id = subCat.Id,
+                            CategoryName = subCat.CategoryName
+                        } : null
+                    }).ToList();
         }
 
         /// <summary>

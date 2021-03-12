@@ -131,8 +131,10 @@ namespace Categorise.Services
             }
 
             List<Category> categories = _context.Categories
-              .Where(c => c.CategoryName.StartsWith(categoryName) && c.UserId == userId ||
-                c.CategoryName.StartsWith(categoryName) && c.IsGlobal).ToList();
+              .Where(
+                  c => c.CategoryName.ToLower().StartsWith(categoryName.ToLower()) &&
+                  (c.UserId == userId || c.IsGlobal)
+                ).ToList();
             return categories;
         }
     }

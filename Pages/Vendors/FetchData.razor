@@ -16,40 +16,42 @@
         </div>
 
         @if (vendors == null)
-            {
-                <p><em>Loading...</em></p>
-            }
-            else
-            {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var vendor in vendors)
-                        {
-                            <tr>
-                                <td>@vendor.VendorName</td>
-                                <td>
-                                    <a class="btn btn-success" href="vendor/edit/@vendor.Id">Edit</a>
-                                    <button class="btn btn-danger" @onclick="@(() => Delete(vendor.Id))">Delete</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-        </Authorized>
-        <NotAuthorized>
-            <a href="Identity/Account/Register">Register</a>
-            <a href="Identity/Account/Login">Log in</a>
-        </NotAuthorized>
-    </AuthorizeView>
+                {
+        <p><em>Loading...</em></p>
+        }
+                else
+                {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var vendor in vendors)
+                {
+                    <tr>
+                        <td>@vendor.VendorName</td>
+                        <td>@(vendor.DefaultCategory?.CategoryName ?? "-")</td>
+                        <td>
+                            <a class="btn btn-success" href="vendor/edit/@vendor.Id">Edit</a>
+                            <button class="btn btn-danger" @onclick="@(() => Delete(vendor.Id))">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <a href="Identity/Account/Register">Register</a>
+        <a href="Identity/Account/Login">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>
 
-    @code {
+@code {
     private IEnumerable<Vendor> vendors;
     private string _userId;
 

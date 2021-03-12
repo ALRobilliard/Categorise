@@ -1,4 +1,8 @@
 @using Categorise.Data;
+@using Categorise.Services
+@using System.Security.Claims;
+@inject ICategoryService CategoryService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <EditForm Model="@vendor" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
@@ -9,6 +13,17 @@
             <ValidationMessage For="@(() => vendor.VendorName)" />
         </div>
     </div>
+    <div class="form-group ">
+        <label>Category:</label>
+        <BlazoredTypeahead SearchMethod="SearchCategories" @bind-Value="@vendor.DefaultCategory">
+            <SelectedTemplate Context="category">
+                @category.CategoryName
+            </SelectedTemplate>
+            <ResultTemplate Context="category">
+                @category.CategoryName
+            </ResultTemplate>
+        </BlazoredTypeahead>
+    </div>
     <button type="submit" class="btn btn-success">
         @ButtonText
     </button>
@@ -17,4 +32,25 @@
     [Parameter] public Vendor vendor { get; set; }
     [Parameter] public string ButtonText { get; set; } = "Save";
     [Parameter] public EventCallback OnValidSubmit { get; set; }
+    private string _userId;
+    protected override async Task OnInitializedAsync()
+    {
+        await GetClaimsPrincipalData();
+    }
+
+    private async Task GetClaimsPrincipalData()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            _userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; ;
+        }
+    }
+
+    private async Task<IEnumerable<Category>> SearchCategories(string searchText)
+    {
+        return await Task.FromResult(CategoryService.SearchCategories(searchText, _userId));
+    }
 }
