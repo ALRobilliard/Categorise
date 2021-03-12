@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Categorise.Data.Migrations
+namespace Categorise.Migrations
 {
     [DbContext(typeof(CategoriseContext))]
-    [Migration("20201207071349_vendor-rename")]
-    partial class vendorrename
+    [Migration("20210312003241_ForeignKeyCleanup")]
+    partial class ForeignKeyCleanup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,15 +47,12 @@ namespace Categorise.Data.Migrations
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("UserForeignKey")
-                        .HasColumnType("text");
-
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserForeignKey");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Accounts");
                 });
@@ -74,18 +71,18 @@ namespace Categorise.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<bool>("IsGlobal")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("UserForeignKey")
-                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserForeignKey");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Categories");
                 });
@@ -122,17 +119,11 @@ namespace Categorise.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("AccountForeignKey")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("AccountId")
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
-
-                    b.Property<Guid?>("CategoryForeignKey")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
@@ -154,19 +145,21 @@ namespace Categorise.Data.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("character varying(25)");
 
-                    b.Property<string>("UserForeignKey")
-                        .HasColumnType("text");
-
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("VendorId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountForeignKey");
+                    b.HasIndex("AccountId");
 
-                    b.HasIndex("CategoryForeignKey");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("UserForeignKey");
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VendorId");
 
                     b.ToTable("Transactions");
                 });
@@ -183,9 +176,6 @@ namespace Categorise.Data.Migrations
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid?>("TransactionForeignKey")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("TransactionId")
                         .HasColumnType("uuid");
 
@@ -198,17 +188,14 @@ namespace Categorise.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("UserForeignKey")
-                        .HasColumnType("text");
-
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TransactionForeignKey");
+                    b.HasIndex("TransactionId");
 
-                    b.HasIndex("UserForeignKey");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TransactionNotes");
                 });
@@ -225,9 +212,6 @@ namespace Categorise.Data.Migrations
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid?>("TransactionForeignKey")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("TransactionId")
                         .HasColumnType("uuid");
 
@@ -236,17 +220,14 @@ namespace Categorise.Data.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("character varying(25)");
 
-                    b.Property<string>("UserForeignKey")
-                        .HasColumnType("text");
-
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TransactionForeignKey");
+                    b.HasIndex("TransactionId");
 
-                    b.HasIndex("UserForeignKey");
+                    b.HasIndex("UserId");
 
                     b.ToTable("TransactionTags");
                 });
@@ -257,17 +238,14 @@ namespace Categorise.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<Guid?>("TransactionForeignKey")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("UserForeignKey")
-                        .HasColumnType("text");
 
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -282,9 +260,9 @@ namespace Categorise.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TransactionForeignKey");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("UserForeignKey");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Vendors");
                 });
@@ -491,7 +469,7 @@ namespace Categorise.Data.Migrations
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserForeignKey");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -500,7 +478,7 @@ namespace Categorise.Data.Migrations
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserForeignKey");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -509,32 +487,46 @@ namespace Categorise.Data.Migrations
                 {
                     b.HasOne("Categorise.Data.Account", "Account")
                         .WithMany("Transactions")
-                        .HasForeignKey("AccountForeignKey");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Categorise.Data.Category", "Category")
                         .WithMany("Transactions")
-                        .HasForeignKey("CategoryForeignKey");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserForeignKey");
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("Categorise.Data.Vendor", "Vendor")
+                        .WithMany("Transactions")
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Account");
 
                     b.Navigation("Category");
 
                     b.Navigation("User");
+
+                    b.Navigation("Vendor");
                 });
 
             modelBuilder.Entity("Categorise.Data.TransactionNote", b =>
                 {
                     b.HasOne("Categorise.Data.Transaction", "Transaction")
                         .WithMany("TransactionNotes")
-                        .HasForeignKey("TransactionForeignKey");
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserForeignKey");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Transaction");
 
@@ -545,11 +537,13 @@ namespace Categorise.Data.Migrations
                 {
                     b.HasOne("Categorise.Data.Transaction", "Transaction")
                         .WithMany("TransactionTags")
-                        .HasForeignKey("TransactionForeignKey");
+                        .HasForeignKey("TransactionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserForeignKey");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Transaction");
 
@@ -558,15 +552,15 @@ namespace Categorise.Data.Migrations
 
             modelBuilder.Entity("Categorise.Data.Vendor", b =>
                 {
-                    b.HasOne("Categorise.Data.Transaction", "Transaction")
+                    b.HasOne("Categorise.Data.Category", "DefaultCategory")
                         .WithMany("Vendors")
-                        .HasForeignKey("TransactionForeignKey");
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserForeignKey");
+                        .HasForeignKey("UserId");
 
-                    b.Navigation("Transaction");
+                    b.Navigation("DefaultCategory");
 
                     b.Navigation("User");
                 });
@@ -630,6 +624,8 @@ namespace Categorise.Data.Migrations
             modelBuilder.Entity("Categorise.Data.Category", b =>
                 {
                     b.Navigation("Transactions");
+
+                    b.Navigation("Vendors");
                 });
 
             modelBuilder.Entity("Categorise.Data.Transaction", b =>
@@ -637,8 +633,11 @@ namespace Categorise.Data.Migrations
                     b.Navigation("TransactionNotes");
 
                     b.Navigation("TransactionTags");
+                });
 
-                    b.Navigation("Vendors");
+            modelBuilder.Entity("Categorise.Data.Vendor", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

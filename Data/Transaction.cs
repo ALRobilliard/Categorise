@@ -43,7 +43,7 @@ namespace Categorise.Data
         /// <summary>
         /// Associated account.
         /// </summary>
-        [ForeignKey("AccountForeignKey")]
+        [ForeignKey("AccountId")]
         public Account Account { get; set; }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Categorise.Data
         /// <summary>
         /// Associated category.
         /// </summary>
-        [ForeignKey("CategoryForeignKey")]
+        [ForeignKey("CategoryId")]
         public Category Category { get; set; }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Categorise.Data
         /// <summary>
         /// Associated vendor.
         /// </summary>
-        [ForeignKey("VendorForeignKey")]
+        [ForeignKey("VendorId")]
         public Vendor Vendor { get; set; }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Categorise.Data
         /// <summary>
         /// Owning user.
         /// </summary>
-        [ForeignKey("UserForeignKey")]
+        [ForeignKey("UserId")]
         public IdentityUser User { get; set; }
 
         /// <summary>

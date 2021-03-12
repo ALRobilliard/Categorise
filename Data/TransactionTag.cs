@@ -25,7 +25,7 @@ namespace Categorise.Data
         /// <summary>
         /// Associated transaction.
         /// </summary>
-        [ForeignKey("TransactionForeignKey")]
+        [ForeignKey("TransactionId")]
         public Transaction Transaction { get; set; }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Categorise.Data
         /// <summary>
         /// Owning user.
         /// </summary>
-        [ForeignKey("UserForeignKey")]
+        [ForeignKey("UserId")]
         public IdentityUser User { get; set; }
     }
 }
