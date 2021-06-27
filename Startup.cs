@@ -116,7 +116,7 @@ namespace Categorise
         private static string ParseConnectionUri(string connectionUri)
         {
             var splitString = connectionUri.Split(new string[] { "postgres://", ":", "@", "/" }, StringSplitOptions.None);
-            var connectionString = $"Host={splitString[3]};Database={splitString[5]};Port={splitString[4]};Username={splitString[1]};Password={splitString[2]}";
+            var connectionString = $"Host={splitString[3]};Database={splitString[5]};Port={splitString[4]};Username={splitString[1]};Password={splitString[2]};SSL Mode=Require;Trust Server Certificate=true";
             return connectionString;
         }
 
