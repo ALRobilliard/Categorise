@@ -31,3 +31,8 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+
+appsettings.json
+appsettings.Developemnt.json
+/appsettings.json
+/appsettings.Development.json

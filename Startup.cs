@@ -44,18 +44,7 @@ namespace Categorise
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            if (CurrentEnvironment.IsDevelopment())
-            {
-                var builder = new NpgsqlConnectionStringBuilder(
-                Configuration.GetConnectionString("CategoriseContext"));
-                builder.Username = Configuration["DB_USER"];
-                builder.Password = Configuration["DB_PASSWORD"];
-                _connectionString = builder.ConnectionString;
-            }
-            else if (CurrentEnvironment.IsProduction())
-            {
-                _connectionString = ParseConnectionUri(Configuration["DATABASE_URL"]);
-            }
+            _connectionString = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<CategoriseContext>(options =>
                 options.UseNpgsql(_connectionString));
@@ -116,7 +105,7 @@ namespace Categorise
         private static string ParseConnectionUri(string connectionUri)
         {
             var splitString = connectionUri.Split(new string[] { "postgres://", ":", "@", "/" }, StringSplitOptions.None);
-            var connectionString = $"Host={splitString[3]};Database={splitString[5]};Port={splitString[4]};Username={splitString[1]};Password={splitString[2]};SSL Mode=Require;Trust Server Certificate=true";
+            var connectionString = $"Host={splitString[5]};Database={splitString[7]};Port={splitString[6]};Username={splitString[3]};Password={splitString[4]};SSL Mode=Require;Trust Server Certificate=true";
             return connectionString;
         }
 

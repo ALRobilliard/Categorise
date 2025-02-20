@@ -93,12 +93,12 @@ namespace Categorise.Data
 
             foreach (var entry in entries)
             {
-                ((BaseEntity)entry.Entity).ModifiedOn = DateTime.Now;
+                ((BaseEntity)entry.Entity).ModifiedOn = DateTime.UtcNow;
 
                 if (entry.State == EntityState.Added)
                 {
                     ((BaseEntity)entry.Entity).Id = Guid.NewGuid();
-                    ((BaseEntity)entry.Entity).CreatedOn = DateTime.Now;
+                    ((BaseEntity)entry.Entity).CreatedOn = DateTime.UtcNow;
                 }
             }
 
